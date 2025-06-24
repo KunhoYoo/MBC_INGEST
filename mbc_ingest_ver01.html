@@ -11,7 +11,7 @@
     .form-group { margin-bottom: 1rem; text-align: left; max-width: 700px; margin-left: auto; margin-right: auto; }
     label { display: block; font-weight: bold; margin-bottom: 0.3rem; }
     input, textarea {
-      width: 100%; padding: 0.5rem; font-size: 1rem;
+      width: 95%; padding: 0.5rem; font-size: 1rem;
       border: 1px solid #ccc; border-radius: 5px;
     }
     #login-code {
@@ -24,10 +24,13 @@
       background: #004080; color: white;
       padding: 0.75rem 1rem; font-size: 1rem;
       border: none; border-radius: 5px; cursor: pointer;
-      margin: 0.3rem; min-width: 22%;
+      margin: 0.3rem; min-width: auto; flex-basis: 20%;
     }
     button:hover { background: #003060; }
-    .btn-row { display: flex; justify-content: center; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.5rem; }
+    .btn-row {
+      display: flex; justify-content: center; flex-wrap: nowrap;
+      gap: 0.5rem; margin-top: 1.5rem;
+    }
     #login-section, #form-section { max-width: 700px; margin: auto; display: none; }
     #login-section.active, #form-section.active { display: block; }
   </style>
@@ -40,8 +43,8 @@
       <label>로그인 코드</label>
       <input type="password" id="login-code" maxlength="10" />
     </div>
-    <div class="btn-row">
-      <button onclick="login()">로그인</button>
+    <div style="margin-top: 0.5rem; text-align: center;">
+      <button style="width: 300px;" onclick="login()">로그인</button>
     </div>
   </div>
 
@@ -63,9 +66,9 @@
     <div class="form-group"><label>촬영장비</label><input type="text" id="equipment"></div>
     <div class="form-group"><label>원본길이 (시:분:초)</label><input type="text" id="duration"></div>
     <div class="btn-row">
-      <button onclick="resetForm()">Reset</button>
-      <button onclick="downloadTXT()">txt추출</button>
-      <button onclick="copyAndShare()">공유</button>
+      <button onclick="resetForm()">리셋</button>
+      <button onclick="copyAndShare()">복사</button>
+      <button onclick="downloadTXT()">추출</button>
       <button onclick="capture()">캡쳐</button>
     </div>
   </div>
@@ -82,6 +85,8 @@
     let currentUser = null;
 
     function login() {
+      currentUser = document.getElementById('login-code').value;
+      // 로그인 코드 불러오기
       const code = document.getElementById('login-code').value;
       if (allowedCodes.includes(code)) {
         currentUser = code;
