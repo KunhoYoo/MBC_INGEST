@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MBC 인제스트 Note</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nanum+Barun+Gothic&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Nanum Barun Gothic', sans-serif; background: #f7f7f7; margin: 0; padding: 1rem; text-align: center; }
+    h1 { color: #004080; cursor: pointer; }
+    .form-group { margin-bottom: 1rem; text-align: left; max-width: 700px; margin-left: auto; margin-right: auto; }
+    label { display: block; font-weight: bold; margin-bottom: 0.3rem; }
+    input, textarea {
+      width: 100%; padding: 0.5rem; font-size: 1rem;
+      border: 1px solid #ccc; border-radius: 5px;
+    }
+    #login-code {
+      width: 300px;
+      margin: 0 auto;
+      display: block;
+      text-align: center;
+    }
+    button {
+      background: #004080; color: white;
+      padding: 0.75rem 1rem; font-size: 1rem;
+      border: none; border-radius: 5px; cursor: pointer;
+      margin: 0.3rem; min-width: 22%;
+    }
+    button:hover { background: #003060; }
+    .btn-row { display: flex; justify-content: center; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.5rem; }
+    #login-section, #form-section { max-width: 700px; margin: auto; display: none; }
+    #login-section.active, #form-section.active { display: block; }
+  </style>
+</head>
+<body>
+  <h1 onclick="goToLogin()">MBC 인제스트 Note</h1>
+
+  <div id="login-section" class="active">
+    <div class="form-group" style="text-align: center;">
+      <label>로그인 코드</label>
+      <input type="password" id="login-code" maxlength="10" />
+    </div>
+    <div class="btn-row">
+      <button onclick="login()">로그인</button>
+    </div>
+  </div>
+
+  <div id="form-section">
+    <div class="form-group"><label>의뢰자</label><input type="text" id="client"></div>
+    <div class="form-group"><label>의뢰형식</label><input type="text" id="request_type" value="원본"></div>
+    <div class="form-group"><label>수신형태</label><input type="text" id="receive_type"></div>
+    <div class="form-group"><label>촬영일</label><input type="date" id="shoot_date"></div>
+    <div class="form-group"><label>대분류</label><input type="text" id="category_main"></div>
+    <div class="form-group"><label>소분류</label><input type="text" id="category_sub"></div>
+    <div class="form-group"><label>제목</label><input type="text" id="title"></div>
+    <div class="form-group"><label>특이사항</label><textarea id="notes"></textarea></div>
+    <div class="form-group"><label>촬영내용</label><textarea id="content"></textarea></div>
+    <div class="form-group"><label>촬영장소</label><input type="text" id="location"></div>
+    <div class="form-group"><label>영상기자</label><input type="text" id="videographer"></div>
+    <div class="form-group"><label>취재기자</label><input type="text" id="reporter"></div>
+    <div class="form-group"><label>영상PD/VJ</label><input type="text" id="vj"></div>
+    <div class="form-group"><label>카드번호</label><input type="text" id="card_number"></div>
+    <div class="form-group"><label>촬영장비</label><input type="text" id="equipment"></div>
+    <div class="form-group"><label>원본길이 (시:분:초)</label><input type="text" id="duration"></div>
+    <div class="btn-row">
+      <button onclick="resetForm()">Reset</button>
+      <button onclick="downloadTXT()">txt추출</button>
+      <button onclick="copyAndShare()">공유</button>
+      <button onclick="capture()">캡쳐</button>
+    </div>
+  </div>
+
+  <script>
+    const allowedCodes = [
+      "1107","1207","1381","1610","1852","1980","2043","2358","2640","2891",
+      "3156","3633","4119","4263","4389","5624","5867","5881","6073","6532",
+      "6666","6688","6829","7221","7278","7314","7566","7619","7749","7842",
+      "7895","7903","8028","8178","8189","8291","8406","8409","8448","8489",
+      "8551","8654","9161","9275","9400","9443","9603","9679","9771","9778"
+    ];
+
+    let currentUser = null;
+
+    function login() {
+      const code = document.getElementById('login-code').value;
+      if (allowedCodes.includes(code)) {
+        currentUser = code;
+        document.getElementById('login-section').classList.remove('active');
+        document.getElementById('form-section').classList.add('active');
+        loadData();
+        setDefaultDate();
+      } else {
+        alert('잘못된 로그인 코드입니다.');
+      }
+    }
+
+    function goToLogin() {
+      document.getElementById('form-section').classList.remove('active');
+      document.getElementById('login-section').classList.add('active');
+      currentUser = null;
+    }
+
+    function resetForm() {
+      document.querySelectorAll('#form-section input, #form-section textarea').forEach(el => el.value = '');
+      document.getElementById('request_type').value = '원본';
+      setDefaultDate();
+      saveData();
+    }
+
+    function setDefaultDate() {
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('shoot_date').value = today;
+    }
+
+    function generateContent() {
+      const fields = [
+        ['의뢰자', 'client'], ['의뢰형식', 'request_type'], ['수신형태', 'receive_type'],
+        ['촬영일', 'shoot_date'], ['대분류', 'category_main'], ['소분류', 'category_sub'],
+        ['제목', 'title'], ['특이사항', 'notes'], ['촬영내용', 'content'],
+        ['촬영장소', 'location'], ['영상기자', 'videographer'], ['취재기자', 'reporter'],
+        ['영상PD/VJ', 'vj'], ['카드번호', 'card_number'], ['촬영장비', 'equipment'], ['원본길이', 'duration']
+      ];
+      let content = `--- MBC 인제스트 Note (사용자 ${currentUser}) ---\n\n`;
+      fields.forEach(([label, id]) => {
+        content += `${label}: ${document.getElementById(id).value}\n`;
+      });
+      return content;
+    }
+
+    function downloadTXT() {
+      const content = generateContent();
+      const blob = new Blob([content], { type: 'text/plain' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `ingest_note_${currentUser}_${Date.now()}.txt`;
+      a.click();
+    }
+
+    function copyAndShare() {
+      const content = generateContent();
+      navigator.clipboard.writeText(content).then(() => {
+        alert("내용이 클립보드에 복사되었습니다. 카카오톡에서 붙여넣기 하세요.");
+        window.location.href = "kakao://send";
+      });
+    }
+
+    function capture() {
+      html2canvas(document.body).then(canvas => {
+        const link = document.createElement('a');
+        link.download = `capture_${currentUser}_${Date.now()}.png`;
+        link.href = canvas.toDataURL();
+        link.click();
+      });
+    }
+
+    function saveData() {
+      if (!currentUser) return;
+      const data = {};
+      document.querySelectorAll('#form-section input, #form-section textarea').forEach(el => {
+        data[el.id] = el.value;
+      });
+      localStorage.setItem('ingest_data_' + currentUser, JSON.stringify(data));
+    }
+
+    function loadData() {
+      if (!currentUser) return;
+      const data = JSON.parse(localStorage.getItem('ingest_data_' + currentUser) || '{}');
+      Object.entries(data).forEach(([key, value]) => {
+        const el = document.getElementById(key);
+        if (el) el.value = value;
+      });
+    }
+
+    window.addEventListener('input', saveData);
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</body>
+</html>
