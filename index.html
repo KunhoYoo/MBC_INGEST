@@ -5,25 +5,36 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MBC 인제스트 Note</title>
   <link href="https://fonts.googleapis.com/css2?family=Nanum+Barun+Gothic&display=swap" rel="stylesheet">
-
-  <meta property="og:title" content="MBC 인제스트 의뢰 등록 노트">
-  <meta property="og:description" content="인덱스 데이터 메모">
-  <meta property="og:image" content="https://kunhoyoo.github.io/MBC_INGEST/mbc_logo.jpg">
-  <meta property="og:url" content="https://kunhoyoo.github.io/MBC_INGEST/">
-  <meta property="og:type" content="website">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="MBC 인제스트 의뢰 등록 노트">
-  <meta name="twitter:description" content="인덱스 데이터 메모">
-  <meta name="twitter:image" content="https://kunhoyoo.github.io/MBC_INGEST/mbc_logo.jpg">
-
   <style>
-    body { font-family: 'Nanum Barun Gothic', sans-serif; background: #f7f7f7; margin: 0; padding: 1rem; text-align: center; }
-    h1 { color: #004080; cursor: pointer; }
-    .form-group { margin-bottom: 1rem; text-align: left; max-width: 700px; margin-left: auto; margin-right: auto; }
-    label { display: block; font-weight: bold; margin-bottom: 0.3rem; }
+    body {
+      font-family: 'Nanum Barun Gothic', sans-serif;
+      background: #f7f7f7;
+      margin: 0;
+      padding: 1rem;
+      text-align: center;
+    }
+    h1 {
+      color: #004080;
+      cursor: pointer;
+    }
+    .form-group {
+      margin-bottom: 1rem;
+      text-align: left;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 0.3rem;
+    }
     input, textarea {
-      width: 95%; padding: 0.5rem; font-size: 1rem;
-      border: 1px solid #ccc; border-radius: 5px;
+      width: 95%;
+      padding: 0.5rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
     }
     textarea#content {
       height: 300px !important;
@@ -35,35 +46,57 @@
       text-align: center;
     }
     button {
-      width: 96px;
-      width: 98px;
-      background: #004080; color: white;
-      padding: 0.75rem 0.5rem; font-size: 0.9rem;
-      border: none; border-radius: 5px; cursor: pointer;
-      margin: 0.2rem; 
+      background: #004080;
+      color: white;
+      padding: 0.75rem 0.5rem;
+      font-size: 0.9rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 0.2rem;
     }
-    button:hover { background: #003060; }
-    button.reset-btn { background: #002244; }
-    button.reset-btn:hover { background: #001a33; }
+    button:hover {
+      background: #003060;
+    }
+    button.reset-btn {
+      background: #002244;
+    }
+    button.reset-btn:hover {
+      background: #001a33;
+    }
     .btn-row {
-      display: flex; justify-content: center; flex-wrap: wrap;
-      gap: 0.3rem; margin-top: 1.5rem;
+      display: flex;
+      justify-content: center;
+      flex-wrap: nowrap;
+      gap: 0.3rem;
+      margin-top: 1.5rem;
     }
-    #login-section, #form-section { max-width: 700px; margin: auto; display: none; }
-    #login-section.active, #form-section.active { display: block; }
+    .btn-row button {
+      width: 18%;
+      max-width: 80px;
+      font-size: 0.75rem;
+      padding: 0.5rem 0.4rem;
+    }
+    #login-section, #form-section {
+      max-width: 700px;
+      margin: auto;
+      display: none;
+    }
+    #login-section.active, #form-section.active {
+      display: block;
+    }
   </style>
 </head>
 <body>
   <img src="title_logo.png" alt="MBC 인제스트 Note" style="cursor:pointer; max-width: 400px; width: 50%; height: auto; margin-bottom: 5px;" onclick="goToLogin()">
-
   <div id="login-section" class="active">
-    <div class="form-group" style="text-align: center;"><input type="password" id="login-code" maxlength="10" placeholder="코드를 입력하세요" style="width: 340px;" />
+    <div class="form-group" style="text-align: center;">
+      <input type="password" id="login-code" maxlength="10" placeholder="코드를 입력하세요" style="width: 340px;" />
     </div>
     <div style="margin-top: 0.5rem; text-align: center;">
       <button id="login-btn" style="width: 358px;" onclick="login()">로그인</button>
     </div>
   </div>
-
   <div id="form-section">
     <div class="form-group"><label>의뢰자</label><input type="text" id="client"></div>
     <div class="form-group"><label>의뢰형식</label><input type="text" id="request_type" value="원본"></div>
@@ -101,15 +134,14 @@
       messagingSenderId: "700019516",
       appId: "1:700019516:web:09f8b929973059316ea439"
     };
-
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
     const allowedCodes = [
-  "rjsgh1", "rjsgh2", "rjsgh3", "rjsgh4", "rjsgh5",
-  "tjrwns1", "tjrwns2", "tjrwns3", "tjrwns4", "tjrwns5",
-  "gustn1", "gustn2", "gustn3", "gustn4", "gustn5"
-	];
+      "rjsgh1", "rjsgh2", "rjsgh3", "rjsgh4", "rjsgh5",
+      "tjrwns1", "tjrwns2", "tjrwns3", "tjrwns4", "tjrwns5",
+      "gustn1", "gustn2", "gustn3", "gustn4", "gustn5"
+    ];
     let currentUser = null;
 
     function login() {
@@ -212,16 +244,15 @@
 
     window.addEventListener('input', saveData);
 
-let autoSaveTimer;
-document.querySelectorAll('#form-section input, #form-section textarea').forEach(el => {
-  el.addEventListener('input', () => {
-    if (autoSaveTimer) clearTimeout(autoSaveTimer);
-    autoSaveTimer = setTimeout(() => {
-      saveToServer(true);
-    }, 10000);
-  });
-});
-
+    let autoSaveTimer;
+    document.querySelectorAll('#form-section input, #form-section textarea').forEach(el => {
+      el.addEventListener('input', () => {
+        if (autoSaveTimer) clearTimeout(autoSaveTimer);
+        autoSaveTimer = setTimeout(() => {
+          saveToServer(true);
+        }, 10000);
+      });
+    });
 
     function confirmReset() {
       if (confirm("정말 리셋 하시겠습니까?")) {
@@ -253,13 +284,12 @@ document.querySelectorAll('#form-section input, #form-section textarea').forEach
     }
   </script>
 
-<script>
-  document.getElementById('login-code').addEventListener('keydown', function(event) {
-    if (event.key === 'Enter') {
-      login();
-    }
-  });
-</script>
+  <script>
+    document.getElementById('login-code').addEventListener('keydown', function(event) {
+      if (event.key === 'Enter') {
+        login();
+      }
+    });
+  </script>
 </body>
 </html>
-
