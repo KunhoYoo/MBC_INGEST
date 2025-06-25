@@ -35,10 +35,12 @@
       text-align: center;
     }
     button {
+      width: 96px;
+      width: 98px;
       background: #004080; color: white;
       padding: 0.75rem 0.5rem; font-size: 0.9rem;
       border: none; border-radius: 5px; cursor: pointer;
-      margin: 0.2rem; flex: 1;
+      margin: 0.2rem; 
     }
     button:hover { background: #003060; }
     button.reset-btn { background: #002244; }
@@ -52,15 +54,13 @@
   </style>
 </head>
 <body>
-  <h1 onclick="goToLogin()">MBC 인제스트 Note</h1>
+  <img src="title_logo.png" alt="MBC 인제스트 Note" style="cursor:pointer; max-width: 400px; width: 50%; height: auto; margin-bottom: 5px;" onclick="goToLogin()">
 
   <div id="login-section" class="active">
-    <div class="form-group" style="text-align: center;">
-      <label>로그인 코드</label>
-      <input type="password" id="login-code" maxlength="10" />
+    <div class="form-group" style="text-align: center;"><input type="password" id="login-code" maxlength="10" placeholder="코드를 입력하세요" style="width: 340px;" />
     </div>
     <div style="margin-top: 0.5rem; text-align: center;">
-      <button style="width: 300px;" onclick="login()">로그인</button>
+      <button id="login-btn" style="width: 358px;" onclick="login()">로그인</button>
     </div>
   </div>
 
@@ -105,11 +105,11 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    const allowedCodes = ["1107","1207","1381","1610","1852","1980","2043","2358","2640","2891",
-      "3156","3633","4119","4263","4389","5624","5867","5881","6073","6532",
-      "6666","6688","6829","7221","7278","7314","7566","7619","7749","7842",
-      "7895","7903","8028","8178","8189","8291","8406","8409","8448","8489",
-      "8551","8654","9161","9275","9400","9443","9603","9679","9771","9778"];
+    const allowedCodes = [
+  "rjsgh1", "rjsgh2", "rjsgh3", "rjsgh4", "rjsgh5",
+  "tjrwns1", "tjrwns2", "tjrwns3", "tjrwns4", "tjrwns5",
+  "gustn1", "gustn2", "gustn3", "gustn4", "gustn5"
+	];
     let currentUser = null;
 
     function login() {
@@ -212,20 +212,31 @@
 
     window.addEventListener('input', saveData);
 
+let autoSaveTimer;
+document.querySelectorAll('#form-section input, #form-section textarea').forEach(el => {
+  el.addEventListener('input', () => {
+    if (autoSaveTimer) clearTimeout(autoSaveTimer);
+    autoSaveTimer = setTimeout(() => {
+      saveToServer(true);
+    }, 10000);
+  });
+});
+
+
     function confirmReset() {
       if (confirm("정말 리셋 하시겠습니까?")) {
         resetForm();
       }
     }
 
-    function saveToServer() {
+    function saveToServer(isAuto = false) {
       if (!currentUser) return;
       const data = {};
       document.querySelectorAll('#form-section input, #form-section textarea').forEach(el => {
         data[el.id] = el.value;
       });
       db.ref('ingest_notes/' + currentUser).set(data)
-        .then(() => alert("서버에 동기화되었습니다."));
+        .then(() => { if (!isAuto) alert("서버에 동기화되었습니다."); });
     }
 
     function loadFromServer() {
@@ -241,5 +252,14 @@
       });
     }
   </script>
+
+<script>
+  document.getElementById('login-code').addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+      login();
+    }
+  });
+</script>
 </body>
 </html>
+
