@@ -31,6 +31,7 @@
       margin-bottom: 0.3rem;
     }
     input, textarea {
+      white-space: pre-wrap;
       width: 95%;
       padding: 0.5rem;
       font-size: 1rem;
@@ -116,7 +117,6 @@
 <button class="reset-btn" onclick="confirmReset()">리셋</button>
 <button onclick="copyAndShare()">복사</button>
 <button onclick="downloadTXT()">추출</button>
-<button onclick="capture()">캡쳐</button>
 <button onclick="saveToServer()">서버</button>
 </div>
 </div>
@@ -175,11 +175,11 @@
     }
 
     function generateContent() {
-      const fields = [['의뢰자', 'client'], ['의뢰형식', 'request_type'], ['수신형태', 'receive_type'],
-        ['촬영일', 'shoot_date'], ['대분류', 'category_main'], ['소분류', 'category_sub'],
-        ['제목', 'title'], ['특이사항', 'notes'], ['촬영내용', 'content'],
-        ['촬영장소', 'location'], ['영상기자', 'videographer'], ['취재기자', 'reporter'],
-        ['영상PD/VJ', 'vj'], ['카드번호', 'card_number'], ['촬영장비', 'equipment'], ['원본길이', 'duration']];
+      const fields = [['의뢰자', 'client'], ['의뢰형식', 'request_type'],
+  ['촬영일', 'shoot_date'], ['대분류', 'category_main'], ['소분류', 'category_sub'],
+  ['제목', 'title'], ['특이사항', 'notes'], ['촬영내용', 'content'],
+  ['촬영장소', 'location'], ['영상기자', 'videographer'], ['취재기자', 'reporter'],
+  ['영상PD/VJ', 'vj'], ['카드번호', 'card_number'], ['촬영장비', 'equipment']];
       let content = `--- MBC 인제스트 Note (사용자 ${currentUser}) ---\n\n`;
       fields.forEach(([label, id]) => {
         content += `${label}: ${document.getElementById(id).value}\n`;
@@ -187,14 +187,21 @@
       return content;
     }
 
-    function downloadTXT() {
-      const content = generateContent();
-      const blob = new Blob([content], { type: 'text/plain' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = `ingest_note_${currentUser}_${Date.now()}.txt`;
-      a.click();
-    }
+    
+function downloadTXT() {
+  const content = generateContent();
+  const blob = new Blob([content], { type: 'text/plain' });
+  const a = document.createElement('a');
+  const now = new Date();
+  const year = now.getFullYear();
+  const time = now.toTimeString().split(' ')[0].replace(/:/g, '');
+  const title = document.getElementById('title').value.replace(/[^a-zA-Z0-9가-힣]/g, '').slice(0, 20);
+  const filename = `${year}_${time}_${title || "Untitled"}.txt`;
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
+}
+
 
     function copyAndShare() {
       const content = generateContent();
