@@ -169,10 +169,22 @@
       saveData();
     }
 
-    function setDefaultDate() {
-      const today = new Date().toISOString().split('T')[0];
-      document.getElementById('shoot_date').value = today;
-    }
+    
+
+function setDefaultDate() {
+  const now = new Date();
+  const offset = 9 * 60 * 60 * 1000; // 9시간
+  const kst = new Date(now.getTime() + offset);
+
+  const yyyy = kst.getFullYear();
+  const mm = String(kst.getMonth() + 1).padStart(2, '0');
+  const dd = String(kst.getDate()).padStart(2, '0');
+
+  const today = `${yyyy}-${mm}-${dd}`;
+  document.getElementById('shoot_date').value = today;
+}
+
+
 
     function generateContent() {
       const fields = [['의뢰자', 'client'], ['의뢰형식', 'request_type'],
@@ -188,19 +200,30 @@
     }
 
     
+
+
 function downloadTXT() {
   const content = generateContent();
   const blob = new Blob([content], { type: 'text/plain' });
   const a = document.createElement('a');
   const now = new Date();
-  const year = now.getFullYear();
-  const time = now.toTimeString().split(' ')[0].replace(/:/g, '');
+
+  const yyyy = now.getFullYear();
+  const mm = String(now.getMonth() + 1).padStart(2, '0');
+  const dd = String(now.getDate()).padStart(2, '0');
+  const hh = String(now.getHours()).padStart(2, '0');
+  const min = String(now.getMinutes()).padStart(2, '0');
+  const ss = String(now.getSeconds()).padStart(2, '0');
+  const dateStr = `${yyyy}${mm}${dd}`;
+  const timeStr = `${hh}${min}${ss}`;
   const title = document.getElementById('title').value.replace(/[^a-zA-Z0-9가-힣]/g, '').slice(0, 20);
-  const filename = `${year}_${time}_${title || "Untitled"}.txt`;
+  const filename = `${dateStr}_${timeStr}_${title || "Untitled"}.txt`;
   a.href = URL.createObjectURL(blob);
   a.download = filename;
   a.click();
 }
+
+
 
 
     function copyAndShare() {
