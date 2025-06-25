@@ -6,14 +6,11 @@
   <title>MBC 인제스트 Note</title>
   <link href="https://fonts.googleapis.com/css2?family=Nanum+Barun+Gothic&display=swap" rel="stylesheet">
 
-  <!-- Open Graph metadata for link preview -->
   <meta property="og:title" content="MBC 인제스트 의뢰 등록 노트">
   <meta property="og:description" content="인덱스 데이터 메모">
   <meta property="og:image" content="https://kunhoyoo.github.io/MBC_INGEST/mbc_logo.jpg">
   <meta property="og:url" content="https://kunhoyoo.github.io/MBC_INGEST/">
   <meta property="og:type" content="website">
-
-  <!-- (Optional) Twitter card support -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="MBC 인제스트 의뢰 등록 노트">
   <meta name="twitter:description" content="인덱스 데이터 메모">
@@ -27,6 +24,9 @@
     input, textarea {
       width: 95%; padding: 0.5rem; font-size: 1rem;
       border: 1px solid #ccc; border-radius: 5px;
+    }
+    textarea#content {
+      height: 300px !important;
     }
     #login-code {
       width: 300px;
@@ -43,7 +43,6 @@
     button:hover { background: #003060; }
     button.reset-btn { background: #002244; }
     button.reset-btn:hover { background: #001a33; }
-
     .btn-row {
       display: flex; justify-content: center; flex-wrap: wrap;
       gap: 0.3rem; margin-top: 1.5rem;
@@ -94,7 +93,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyACkd1QzPgDnmRz3b206e4IiePiS55keio",
@@ -114,7 +112,6 @@
       "6666","6688","6829","7221","7278","7314","7566","7619","7749","7842",
       "7895","7903","8028","8178","8189","8291","8406","8409","8448","8489",
       "8551","8654","9161","9275","9400","9443","9603","9679","9771","9778"];
-
     let currentUser = null;
 
     function login() {
@@ -154,12 +151,9 @@
         ['제목', 'title'], ['특이사항', 'notes'], ['촬영내용', 'content'],
         ['촬영장소', 'location'], ['영상기자', 'videographer'], ['취재기자', 'reporter'],
         ['영상PD/VJ', 'vj'], ['카드번호', 'card_number'], ['촬영장비', 'equipment'], ['원본길이', 'duration']];
-      let content = `--- MBC 인제스트 Note (사용자 ${currentUser}) ---
-
-`;
+      let content = `--- MBC 인제스트 Note (사용자 ${currentUser}) ---\n\n`;
       fields.forEach(([label, id]) => {
-        content += `${label}: ${document.getElementById(id).value}
-`;
+        content += `${label}: ${document.getElementById(id).value}\n`;
       });
       return content;
     }
@@ -181,11 +175,22 @@
     }
 
     function capture() {
+      const textareas = document.querySelectorAll('textarea');
+      const originalHeights = [];
+      textareas.forEach(el => {
+        originalHeights.push(el.style.height);
+        el.style.height = el.scrollHeight + 'px';
+      });
+
       html2canvas(document.body).then(canvas => {
         const link = document.createElement('a');
         link.download = `capture_${currentUser}_${Date.now()}.png`;
         link.href = canvas.toDataURL();
         link.click();
+
+        textareas.forEach((el, i) => {
+          el.style.height = originalHeights[i];
+        });
       });
     }
 
