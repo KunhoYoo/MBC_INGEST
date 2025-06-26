@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-
 <html lang="ko">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>MBC 인제스트 Note</title>
-<link href="https://fonts.googleapis.com/css2?family=Nanum+Barun+Gothic&amp;display=swap" rel="stylesheet"/>
-<style>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>MBC 인제스트 Note</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nanum+Barun+Gothic&display=swap" rel="stylesheet"/>
+  <style>
     body {
       font-family: 'Nanum Barun Gothic', sans-serif;
       background: #f7f7f7;
@@ -87,253 +86,254 @@
     #login-section.active, #form-section.active {
       display: block;
     }
+    #sms-popup {
+      position: fixed;
+      top: 30%;
+      left: 50%;
+      transform: translate(-50%, -30%);
+      background: white;
+      padding: 20px;
+      border: 2px solid #004080;
+      border-radius: 8px;
+      z-index: 1000;
+      width: 80%;
+      max-width: 500px;
+      display: none;
+    }
+    #sms-popup textarea {
+      width: 100%;
+      height: 120px;
+      margin-bottom: 10px;
+    }
+    #sms-popup .btn-row {
+      display: flex;
+      justify-content: flex-end;
+    }
   </style>
 </head>
 <body>
-<div id="login-logo-wrapper" style="display: none;"><br/><br/><br/><br/><br/><br/><br/><br/><img alt="MBC 인제스트 Note" onclick="goToLogin()" src="title_logo.png" style="cursor:pointer; max-width: 400px; width: 50%; height: auto; margin: 30px auto 10px auto; display: block;"/></div><div class="active" id="login-section">
-<div class="form-group" style="text-align: center;">
-<input id="login-code" maxlength="10" placeholder="코드를 입력하세요" style="width: 340px;" type="password"/>
+<div id="login-logo-wrapper" style="display: none;"><br/><br/><br/><br/><br/><br/><br/><br/><img alt="MBC 인제스트 Note" onclick="goToLogin()" src="title_logo.png" style="cursor:pointer; max-width: 400px; width: 50%; height: auto; margin: 30px auto 10px auto; display: block;"/></div>
+<div class="active" id="login-section">
+  <div class="form-group" style="text-align: center;">
+    <input id="login-code" maxlength="10" placeholder="코드를 입력하세요" style="width: 340px;" type="password"/>
+  </div>
+  <div style="margin-top: 0.5rem; text-align: center;">
+    <button id="login-btn" onclick="login()" style="width: 358px;">로그인</button>
+  </div>
 </div>
-<div style="margin-top: 0.5rem; text-align: center;">
-<button id="login-btn" onclick="login()" style="width: 358px;">로그인</button>
+<div id="form-section">
+  <img alt="MBC 인제스트 Note" onclick="goToLogin()" src="title_logo.png" style="cursor:pointer; max-width: 400px; width: 50%; height: auto; margin: 30px auto 10px auto; display: block;"/>
+  <div class="form-group"><label>의뢰자</label><input id="client" type="text"/></div>
+  <div class="form-group"><label>의뢰형식</label><input id="request_type" type="text" value="원본"/></div>
+  <div class="form-group"><label>촬영일</label><input id="shoot_date" type="date"/></div>
+  <div class="form-group"><label>대분류</label><input id="category_main" type="text"/></div>
+  <div class="form-group"><label>소분류</label><input id="category_sub" type="text"/></div>
+  <div class="form-group"><label>제목</label><input id="title" type="text"/></div>
+  <div class="form-group"><label>특이사항</label><textarea id="notes"></textarea></div>
+  <div class="form-group"><label>촬영내용</label><textarea id="content"></textarea></div>
+  <div class="form-group"><label>촬영장소</label><input id="location" type="text"/></div>
+  <div class="form-group"><label>영상기자</label><input id="videographer" type="text"/></div>
+  <div class="form-group"><label>취재기자</label><input id="reporter" type="text"/></div>
+  <div class="form-group"><label>영상PD/VJ</label><input id="vj" type="text"/></div>
+  <div class="form-group"><label>카드번호</label><input id="card_number" type="text"/></div>
+  <div class="form-group"><label>촬영장비</label><input id="equipment" type="text"/></div>
+  <div class="btn-row">
+    <button class="reset-btn" onclick="confirmReset()">리셋</button>
+    <button onclick="openSMSPopup()">문자 내용</button>
+    <button onclick="copyAndShare()">복사</button>
+    <button onclick="downloadTXT()">추출</button>
+    <button onclick="saveToServer()">서버</button>
 </div>
 </div>
-<div id="form-section"><img alt="MBC 인제스트 Note" onclick="goToLogin()" src="title_logo.png" style="cursor:pointer; max-width: 400px; width: 50%; height: auto; margin: 30px auto 10px auto; display: block;"/>
-<div class="form-group"><label>의뢰자</label><input id="client" type="text"/></div>
-<div class="form-group"><label>의뢰형식</label><input id="request_type" type="text" value="원본"/></div>
-<div class="form-group"><label>촬영일</label><input id="shoot_date" type="date"/></div>
-<div class="form-group"><label>대분류</label><input id="category_main" type="text"/></div>
-<div class="form-group"><label>소분류</label><input id="category_sub" type="text"/></div>
-<div class="form-group"><label>제목</label><input id="title" type="text"/></div>
-<div class="form-group"><label>특이사항</label><textarea id="notes"></textarea></div>
-<div class="form-group"><label>촬영내용</label><textarea id="content"></textarea></div>
-<div class="form-group"><label>촬영장소</label><input id="location" type="text"/></div>
-<div class="form-group"><label>영상기자</label><input id="videographer" type="text"/></div>
-<div class="form-group"><label>취재기자</label><input id="reporter" type="text"/></div>
-<div class="form-group"><label>영상PD/VJ</label><input id="vj" type="text"/></div>
-<div class="form-group"><label>카드번호</label><input id="card_number" type="text"/></div>
-<div class="form-group"><label>촬영장비</label><input id="equipment" type="text"/></div>
-<div class="btn-row">
-<button class="reset-btn" onclick="confirmReset()">리셋</button>
-<button onclick="copyAndShare()">복사</button>
-<button onclick="downloadTXT()">추출</button>
-<button onclick="saveToServer()">서버</button>
-</div>
+<div id="sms-popup">
+  <textarea id="sms-text" placeholder="문자 내용을 붙여넣기 하세요"></textarea>
+  <div class="btn-row">
+    <button onclick="parseSMSAndInsert()">입력</button>
+    <button onclick="closeSMSPopup()">취소</button>
+  </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyACkd1QzPgDnmRz3b206e4IiePiS55keio",
-      authDomain: "mbc-ingest.firebaseapp.com",
-      databaseURL: "https://mbc-ingest-default-rtdb.firebaseio.com",
-      projectId: "mbc-ingest",
-      storageBucket: "mbc-ingest.firebasestorage.app",
-      messagingSenderId: "700019516",
-      appId: "1:700019516:web:09f8b929973059316ea439"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
+  const firebaseConfig = {
+    apiKey: "AIzaSyACkd1QzPgDnmRz3b206e4IiePiS55keio",
+    authDomain: "mbc-ingest.firebaseapp.com",
+    databaseURL: "https://mbc-ingest-default-rtdb.firebaseio.com",
+    projectId: "mbc-ingest",
+    storageBucket: "mbc-ingest.firebasestorage.app",
+    messagingSenderId: "700019516",
+    appId: "1:700019516:web:09f8b929973059316ea439"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+  const allowedCodes = ["rjsgh1","rjsgh2","rjsgh3","rjsgh4","rjsgh5","0001","0002","0003","0004","0005","gustn1","gustn2","gustn3","gustn4","gustn5"];
+  let currentUser = null;
 
-    const allowedCodes = [
-      "rjsgh1", "rjsgh2", "rjsgh3", "rjsgh4", "rjsgh5",
-      "tjrwns1", "tjrwns2", "tjrwns3", "tjrwns4", "tjrwns5",
-      "gustn1", "gustn2", "gustn3", "gustn4", "gustn5"
-    ];
-    let currentUser = null;
-
-    function login() {
-      currentUser = document.getElementById('login-code').value;
-      if (allowedCodes.includes(currentUser)) {
-        document.getElementById('login-section').classList.remove('active');
-        document.getElementById('form-section').classList.add('active');
-        loadData();
-        loadFromServer();
-        setDefaultDate();
-      } else {
-        alert('잘못된 로그인 코드입니다.');
-      }
-    }
-
-    function goToLogin() {
-      document.getElementById('form-section').classList.remove('active');
-      document.getElementById('login-section').classList.add('active');
-      currentUser = null;
-    }
-
-    function resetForm() {
-      document.querySelectorAll('#form-section input, #form-section textarea').forEach(el => el.value = '');
-      document.getElementById('request_type').value = '원본';
+  function login() {
+    currentUser = document.getElementById('login-code').value;
+    if (allowedCodes.includes(currentUser)) {
+      document.getElementById('login-section').classList.remove('active');
+      document.getElementById('form-section').classList.add('active');
+      loadData();
+      loadFromServer();
       setDefaultDate();
-      saveData();
-    }
-
-    
-
-function setDefaultDate() {
-  const now = new Date();
-  const offset = 9 * 60 * 60 * 1000; // 9시간
-  const kst = new Date(now.getTime() + offset);
-
-  const yyyy = kst.getFullYear();
-  const mm = String(kst.getMonth() + 1).padStart(2, '0');
-  const dd = String(kst.getDate()).padStart(2, '0');
-
-  const today = `${yyyy}-${mm}-${dd}`;
-  document.getElementById('shoot_date').value = today;
-}
-
-
-
-    function generateContent() {
-      const fields = [['의뢰자', 'client'], ['의뢰형식', 'request_type'],
-  ['촬영일', 'shoot_date'], ['대분류', 'category_main'], ['소분류', 'category_sub'],
-  ['제목', 'title'], ['특이사항', 'notes'], ['촬영내용', 'content'],
-  ['촬영장소', 'location'], ['영상기자', 'videographer'], ['취재기자', 'reporter'],
-  ['영상PD/VJ', 'vj'], ['카드번호', 'card_number'], ['촬영장비', 'equipment']];
-      let content = `--- MBC 인제스트 Note (사용자 ${currentUser}) ---\n\n`;
-      fields.forEach(([label, id]) => {
-        content += `${label}: ${document.getElementById(id).value}\n`;
-      });
-      return content;
-    }
-
-    
-
-
-function downloadTXT() {
-  const content = generateContent();
-  const blob = new Blob([content], { type: 'text/plain' });
-  const a = document.createElement('a');
-  const now = new Date();
-
-  const yyyy = now.getFullYear();
-  const mm = String(now.getMonth() + 1).padStart(2, '0');
-  const dd = String(now.getDate()).padStart(2, '0');
-  const hh = String(now.getHours()).padStart(2, '0');
-  const min = String(now.getMinutes()).padStart(2, '0');
-  const ss = String(now.getSeconds()).padStart(2, '0');
-  const dateStr = `${yyyy}${mm}${dd}`;
-  const timeStr = `${hh}${min}${ss}`;
-  const title = document.getElementById('title').value.replace(/[^a-zA-Z0-9가-힣]/g, '').slice(0, 20);
-  const filename = `${dateStr}_${timeStr}_${title || "Untitled"}.txt`;
-  a.href = URL.createObjectURL(blob);
-  a.download = filename;
-  a.click();
-}
-
-
-
-
-    function copyAndShare() {
-      const content = generateContent();
-      navigator.clipboard.writeText(content).then(() => {
-        alert("내용이 클립보드에 복사되었습니다. 카카오톡에서 붙여넣기 하세요.");
-      });
-    }
-
-    function capture() {
-      const textareas = document.querySelectorAll('textarea');
-      const originalHeights = [];
-      textareas.forEach(el => {
-        originalHeights.push(el.style.height);
-        el.style.height = el.scrollHeight + 'px';
-      });
-
-      html2canvas(document.body).then(canvas => {
-        const link = document.createElement('a');
-        link.download = `capture_${currentUser}_${Date.now()}.png`;
-        link.href = canvas.toDataURL();
-        link.click();
-
-        textareas.forEach((el, i) => {
-          el.style.height = originalHeights[i];
-        });
-      });
-    }
-
-    function saveData() {
-      if (!currentUser) return;
-      const data = {};
-      document.querySelectorAll('#form-section input, #form-section textarea').forEach(el => {
-        data[el.id] = el.value;
-      });
-      localStorage.setItem('ingest_data_' + currentUser, JSON.stringify(data));
-    }
-
-    function loadData() {
-      if (!currentUser) return;
-      const data = JSON.parse(localStorage.getItem('ingest_data_' + currentUser) || '{}');
-      Object.entries(data).forEach(([key, value]) => {
-        const el = document.getElementById(key);
-        if (el) el.value = value;
-      });
-    }
-
-    window.addEventListener('input', saveData);
-
-    let autoSaveTimer;
-    document.querySelectorAll('#form-section input, #form-section textarea').forEach(el => {
-      el.addEventListener('input', () => {
-        if (autoSaveTimer) clearTimeout(autoSaveTimer);
-        autoSaveTimer = setTimeout(() => {
-          saveToServer(true);
-        }, 10000);
-      });
-    });
-
-    function confirmReset() {
-      if (confirm("정말 리셋 하시겠습니까?")) {
-        resetForm();
-      }
-    }
-
-    function saveToServer(isAuto = false) {
-      if (!currentUser) return;
-      const data = {};
-      document.querySelectorAll('#form-section input, #form-section textarea').forEach(el => {
-        data[el.id] = el.value;
-      });
-      db.ref('ingest_notes/' + currentUser).set(data)
-        .then(() => { if (!isAuto) alert("서버에 동기화되었습니다."); });
-    }
-
-    function loadFromServer() {
-      if (!currentUser) return;
-      db.ref('ingest_notes/' + currentUser).once('value').then(snapshot => {
-        const data = snapshot.val();
-        if (data) {
-          Object.entries(data).forEach(([key, value]) => {
-            const el = document.getElementById(key);
-            if (el) el.value = value;
-          });
-        }
-      });
-    }
-  </script>
-<script>
-    document.getElementById('login-code').addEventListener('keydown', function(event) {
-      if (event.key === 'Enter') {
-        login();
-      }
-    });
-  </script>
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-  const loginSection = document.getElementById("login-section");
-  const formSection = document.getElementById("form-section");
-  const logoWrapper = document.getElementById("login-logo-wrapper");
-  function updateVisibility() {
-    if (loginSection.classList.contains("active")) {
-      logoWrapper.style.display = "block";
     } else {
-      logoWrapper.style.display = "none";
+      alert('잘못된 로그인 코드입니다.');
     }
   }
-  updateVisibility();
-  const observer = new MutationObserver(updateVisibility);
-  observer.observe(loginSection, { attributes: true, attributeFilter: ["class"] });
+
+  function goToLogin() {
+    document.getElementById('form-section').classList.remove('active');
+    document.getElementById('login-section').classList.add('active');
+    currentUser = null;
+  }
+
+  function resetForm() {
+    document.querySelectorAll('#form-section input, #form-section textarea').forEach(el => el.value = '');
+    document.getElementById('request_type').value = '원본';
+    setDefaultDate();
+    saveData();
+  }
+
+  function setDefaultDate() {
+    const now = new Date();
+    const offset = 9 * 60 * 60 * 1000;
+    const kst = new Date(now.getTime() + offset);
+    const yyyy = kst.getFullYear();
+    const mm = String(kst.getMonth() + 1).padStart(2, '0');
+    const dd = String(kst.getDate()).padStart(2, '0');
+    document.getElementById('shoot_date').value = `${yyyy}-${mm}-${dd}`;
+  }
+
+  function generateContent() {
+    const fields = [['의뢰자', 'client'], ['의뢰형식', 'request_type'], ['촬영일', 'shoot_date'], ['대분류', 'category_main'], ['소분류', 'category_sub'], ['제목', 'title'], ['특이사항', 'notes'], ['촬영내용', 'content'], ['촬영장소', 'location'], ['영상기자', 'videographer'], ['취재기자', 'reporter'], ['영상PD/VJ', 'vj'], ['카드번호', 'card_number'], ['촬영장비', 'equipment']];
+    let content = ``;
+    fields.forEach(([label, id], idx) => {
+  content += `${label}: ${document.getElementById(id).value}`;
+  if (idx < fields.length - 1) content += `\n`;
 });
-</script></body>
+    return content;
+  }
+
+  function downloadTXT() {
+    const content = generateContent();
+    const blob = new Blob([content], { type: 'text/plain' });
+    const a = document.createElement('a');
+    const now = new Date();
+    const yyyy = now.getFullYear();
+    const mm = String(now.getMonth() + 1).padStart(2, '0');
+    const dd = String(now.getDate()).padStart(2, '0');
+    const hh = String(now.getHours()).padStart(2, '0');
+    const min = String(now.getMinutes()).padStart(2, '0');
+    const ss = String(now.getSeconds()).padStart(2, '0');
+    const dateStr = `${yyyy}${mm}${dd}`;
+    const timeStr = `${hh}${min}${ss}`;
+    const title = document.getElementById('title').value.replace(/[^a-zA-Z0-9가-힣]/g, '').slice(0, 20);
+    const filename = `${dateStr}_${timeStr}_${title || "Untitled"}.txt`;
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    a.click();
+  }
+
+  function copyAndShare() {
+    const content = generateContent();
+    navigator.clipboard.writeText(content).then(() => {
+      alert("내용이 클립보드에 복사되었습니다. 카카오톡에서 붙여넣기 하세요.");
+    });
+  }
+
+  function confirmReset() {
+    if (confirm("정말 리셋 하시겠습니까?")) {
+      resetForm();
+    }
+  }
+
+  function saveToServer(isAuto = false) {
+    if (!currentUser) return;
+    const data = {};
+    document.querySelectorAll('#form-section input, #form-section textarea').forEach(el => {
+      data[el.id] = el.value;
+    });
+    db.ref('ingest_notes/' + currentUser).set(data).then(() => {
+      if (!isAuto) alert("서버에 동기화되었습니다.");
+    });
+  }
+
+  function loadFromServer() {
+    if (!currentUser) return;
+    db.ref('ingest_notes/' + currentUser).once('value').then(snapshot => {
+      const data = snapshot.val();
+      if (data) {
+        Object.entries(data).forEach(([key, value]) => {
+          const el = document.getElementById(key);
+          if (el) el.value = value;
+        });
+      }
+    });
+  }
+
+  function saveData() {
+    if (!currentUser) return;
+    const data = {};
+    document.querySelectorAll('#form-section input, #form-section textarea').forEach(el => {
+      data[el.id] = el.value;
+    });
+    localStorage.setItem('ingest_data_' + currentUser, JSON.stringify(data));
+  }
+
+  function loadData() {
+    if (!currentUser) return;
+    const data = JSON.parse(localStorage.getItem('ingest_data_' + currentUser) || '{}');
+    Object.entries(data).forEach(([key, value]) => {
+      const el = document.getElementById(key);
+      if (el) el.value = value;
+    });
+  }
+
+  function openSMSPopup() {
+    document.getElementById('sms-popup').style.display = 'block';
+  }
+
+  function closeSMSPopup() {
+    document.getElementById('sms-popup').style.display = 'none';
+    document.getElementById('sms-text').value = '';
+  }
+
+  function parseSMSAndInsert() {
+    const sms = document.getElementById('sms-text').value.trim();
+    const firstLine = sms.split('\n')[0];
+    const [title, reporter, vj] = firstLine.split(',').map(e => e.trim());
+    if (title) document.getElementById('title').value = title;
+    if (reporter) document.getElementById('reporter').value = reporter;
+    if (vj) document.getElementById('vj').value = vj;
+    closeSMSPopup();
+    saveData();
+  }
+
+  document.getElementById('login-code').addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') login();
+  });
+
+  document.addEventListener("DOMContentLoaded", function() {
+    const loginSection = document.getElementById("login-section");
+    const formSection = document.getElementById("form-section");
+    const logoWrapper = document.getElementById("login-logo-wrapper");
+    function updateVisibility() {
+      logoWrapper.style.display = loginSection.classList.contains("active") ? "block" : "none";
+    }
+    updateVisibility();
+    const observer = new MutationObserver(updateVisibility);
+    observer.observe(loginSection, { attributes: true, attributeFilter: ["class"] });
+  });
+
+  let autoSaveTimer;
+  document.querySelectorAll('#form-section input, #form-section textarea').forEach(el => {
+    el.addEventListener('input', () => {
+      if (autoSaveTimer) clearTimeout(autoSaveTimer);
+      autoSaveTimer = setTimeout(() => saveToServer(true), 10000);
+    });
+  });
+</script>
+</body>
 </html>
