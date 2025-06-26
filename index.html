@@ -316,15 +316,15 @@
     if (vj) document.getElementById('vj').value = vj;
 
     try {
-      const prompt = `다음 문자 내용을 참고하여 방송 인제스트에 적절한 촬영 내용을 항목별로 5~10줄로 정리해줘. 내용은 다음과 같아:\n\n${sms}\n\n각 줄 마지막은 반드시 싱크, 인터뷰 싱크, 스케치 등으로 끝나야 하고 마침표는 사용하지 마`;
+      const prompt = `다음 문자 내용을 참고하여 방송 인제스트에 적절한 촬영 내용을 항목별로 5~10줄로 정리해줘. 내용은 다음과 같아:\n\n${sms}`;
       const response = await fetch("https://api.openai.com/v1/chat/completions", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "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"
+          "Authorization": "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"
         },
         body: JSON.stringify({
-          model: "gpt-4.1-mini",
+          model: "gpt-4",
           messages: [{ role: "user", content: prompt }],
           temperature: 0.7
         })
