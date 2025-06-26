@@ -175,7 +175,13 @@
   };
   firebase.initializeApp(firebaseConfig);
   const db = firebase.database();
-  const allowedCodes = ["rjsgh1","rjsgh2","rjsgh3","rjsgh4","rjsgh5","0001","0002","0003","0004","0005","gustn1","gustn2","gustn3","gustn4","gustn5"];
+  const allowedCodes = [
+  "rjsgh1","rjsgh2","rjsgh3","rjsgh4","rjsgh5",
+  "0001","0002","0003","0004","0005",
+  "gustn1","gustn2","gustn3","gustn4","gustn5",
+  "wnsgml1","wnsgml2","wnsgml3","wnsgml4","wnsgml5",
+  "alswnd1","alswnd2","alswnd3","alswnd4","alswnd5"
+]
   let currentUser = null;
 
   function login() {
