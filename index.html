@@ -146,14 +146,14 @@
   <div class="form-group"><label>촬영장비</label><input id="equipment" type="text"/></div>
   <div class="btn-row">
     <button class="reset-btn" onclick="confirmReset()">리셋</button>
-    <button onclick="openSMSPopup()">문자 내용</button>
+    <button onclick="openSMSPopup()">의뢰 내용</button>
     <button onclick="copyAndShare()">복사</button>
     <button onclick="downloadTXT()">추출</button>
     <button onclick="saveToServer()">서버</button>
 </div>
 </div>
 <div id="sms-popup">
-  <textarea id="sms-text" placeholder="문자 내용을 붙여넣기 하세요"></textarea>
+  <textarea id="sms-text" placeholder="의뢰 내용을 붙여넣기 하세요"></textarea>
   <div class="btn-row">
     <button onclick="parseSMSAndInsert()">입력</button>
     <button onclick="closeSMSPopup()">취소</button>
