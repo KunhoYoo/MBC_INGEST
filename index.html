@@ -308,16 +308,34 @@
     document.getElementById('sms-text').value = '';
   }
 
-  function parseSMSAndInsert() {
-    const sms = document.getElementById('sms-text').value.trim();
-    const firstLine = sms.split('\n')[0];
-    const [title, reporter, vj] = firstLine.split(',').map(e => e.trim());
-    if (title) document.getElementById('title').value = title;
-    if (reporter) document.getElementById('reporter').value = reporter;
-    if (vj) document.getElementById('vj').value = vj;
-    closeSMSPopup();
-    saveData();
+function parseSMSAndInsert() {
+  const sms = document.getElementById('sms-text').value.trim();
+  const firstLine = sms.split('\n')[0];
+  const [title, reporter, vj] = firstLine.split(',').map(e => e.trim());
+
+  // 제목 입력
+  if (title) {
+    document.getElementById('title').value = title;
+
+    // 촬영내용에 제목 자동 추가
+    const contentBox = document.getElementById('content');
+    contentBox.value = title + '\n' + contentBox.value;
   }
+
+  // 취재기자 입력
+  if (reporter) {
+    document.getElementById('reporter').value = reporter;
+  }
+
+  // VJ 입력 + 의뢰자에 복사
+  if (vj) {
+    document.getElementById('vj').value = vj;
+    document.getElementById('client').value = vj;
+  }
+
+  closeSMSPopup();
+  saveData();
+}
 
   document.getElementById('login-code').addEventListener('keydown', function(event) {
     if (event.key === 'Enter') login();
