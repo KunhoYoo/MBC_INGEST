@@ -280,32 +280,6 @@ body {
   }
 </style>
 
-
-<style>
-  .button-row {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    gap: 6px;
-    margin-top: 6px;
-    flex-wrap: nowrap;
-  }
-  .small-btn {
-    font-size: 0.6rem;
-    background: #e0e0e0;
-    color: #000;
-    font-weight: 500;
-    padding: 4px 12px;
-    line-height: 1.2;
-    border: none;
-    border-radius: 8px;
-    vertical-align: middle;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-  }
-</style>
-
 </head>
 <body>
 <div id="login-logo-wrapper" style="display: none;"><br/><br/><br/><br/><br/><br/><br/><br/><img alt="MBC 인제스트 Note" onclick="goToLogin();" src="title_logo.png" style="cursor:pointer; max-width: 400px; width: 50%; height: auto; margin: 30px auto 10px auto; display: block;"/></div>
@@ -1028,18 +1002,99 @@ function showCanteen() {
 
 
 <script>
+const storage = firebase.storage();
+const db = firebase.database();
+
+const DAYS = ['월','화','수','목','금','토','일'];
+
+// Load from database once when canteen is shown
+function loadCanteenFromDB() {
+  DAYS.forEach(day => {
+    const gallery = document.getElementById('day-' + day + '-gallery');
+    if (!gallery) return;
+    db.ref('weekly_canteen_backup/day-' + day).once('value').then(snapshot => {
+      const urls = snapshot.val() || [];
+      gallery.innerHTML = '';
+      urls.forEach(url => {
+        const img = document.createElement("img");
+        img.src = url;
+        img.onclick = () => enlargeImage(url, "image");
+        gallery.appendChild(img);
+      });
+    });
+  });
+}
+
+function handleDayUpload(event, dayKey) {
+  const files = Array.from(event.target.files).slice(0, 3);
+  const storageRef = storage.ref("canteen/" + dayKey);
+  const gallery = document.getElementById(dayKey + '-gallery');
+
+  files.forEach(file => {
+    const uniqueName = Date.now() + "_" + file.name;
+    const ref = storageRef.child(uniqueName);
+    ref.put(file).then(snapshot => snapshot.ref.getDownloadURL())
+      .then(url => {
+        const img = document.createElement("img");
+        img.src = url;
+        img.onclick = () => enlargeImage(url, file.name);
+        gallery.appendChild(img);
+        while (gallery.children.length > 3) {
+          gallery.removeChild(gallery.firstChild);
+        }
+        updateGalleryDB(dayKey);
+      });
+  });
+}
+
+function deleteDayImages(dayKey) {
+  const gallery = document.getElementById(dayKey + '-gallery');
+  gallery.innerHTML = '';
+  updateGalleryDB(dayKey);
+}
+
+function updateGalleryDB(dayKey) {
+  const gallery = document.getElementById(dayKey + '-gallery');
+  const urls = Array.from(gallery.children).map(img => img.src);
+  db.ref('weekly_canteen_backup/' + dayKey).set(urls);
+}
+
+function showCanteen() {
+  document.getElementById('login-section').style.display = 'none';
+  document.getElementById('form-section').style.display = 'none';
+  document.getElementById('canteen-section').style.display = 'block';
+  loadCanteenFromDB();
+}
+
 setInterval(() => {
   if (document.getElementById('canteen-section').style.display === 'block') {
-    const result = {};
-    ['월','화','수','목','금','토','일'].forEach(day => {
-      const gallery = document.getElementById(`day-${day}-gallery`);
-      result[`day-${day}`] = Array.from(gallery.children).map(img => img.src);
-    });
-    if (window.firebase?.database) {
-      firebase.database().ref('weekly_canteen_backup').set(result);
-    }
+    DAYS.forEach(day => updateGalleryDB('day-' + day));
   }
 }, 10000);
+
+function enlargeImage(src, alt) {
+  const popup = document.createElement("div");
+  popup.style.position = "fixed";
+  popup.style.top = "0";
+  popup.style.left = "0";
+  popup.style.width = "100vw";
+  popup.style.height = "100vh";
+  popup.style.background = "rgba(0,0,0,0.8)";
+  popup.style.display = "flex";
+  popup.style.alignItems = "center";
+  popup.style.justifyContent = "center";
+  popup.style.zIndex = "10000";
+  popup.onclick = () => document.body.removeChild(popup);
+
+  const img = document.createElement("img");
+  img.src = src;
+  img.alt = alt;
+  img.style.maxWidth = "90%";
+  img.style.maxHeight = "90%";
+  popup.appendChild(img);
+
+  document.body.appendChild(popup);
+}
 </script>
 
 </body>
