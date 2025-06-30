@@ -431,9 +431,12 @@ function loadCanteenImages() {
 }
 </script>
 <div id="canteen-section" style="display:none; text-align:center; margin-top:30px;">
-
-<input accept="image/*" id="canteen-upload" multiple="" onchange="handleCanteenUpload(event)" style="width: 180px; margin: 10px auto;" type="file"/>
 <div id="canteen-gallery" style="display:flex; flex-wrap:wrap; justify-content:center; margin-top:20px; gap:10px;"></div>
+<div id="canteen-controls" style="margin-top:20px;">
+<input accept="image/*" id="canteen-upload" multiple="" onchange="handleCanteenUpload(event)" style="width: 180px; height: 28px; margin-right: 10px;" type="file"/>
+<button onclick="toggleEditMode()">편집</button>
+<button onclick="deleteSelectedImages()">삭제</button>
+</div>
 </div>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
 <script>
@@ -493,6 +496,200 @@ function loadCanteenImages() {
       }
     });
   });
+}
+</script>
+<script>
+let editMode = false;
+let selectedToDelete = new Set();
+
+function toggleEditMode() {
+  editMode = !editMode;
+  loadCanteenImages();
+}
+
+function deleteSelectedImages() {
+  const storageRef = firebase.storage().ref("canteen");
+  selectedToDelete.forEach(name => {
+    storageRef.child(name).delete().then(() => {
+      selectedToDelete.delete(name);
+      loadCanteenImages();
+    });
+  });
+}
+
+function enlargeImage(src, alt) {
+  const popup = document.createElement("div");
+  popup.style.position = "fixed";
+  popup.style.top = "0";
+  popup.style.left = "0";
+  popup.style.width = "100vw";
+  popup.style.height = "100vh";
+  popup.style.background = "rgba(0,0,0,0.8)";
+  popup.style.display = "flex";
+  popup.style.alignItems = "center";
+  popup.style.justifyContent = "center";
+  popup.style.zIndex = "10000";
+  popup.onclick = () => document.body.removeChild(popup);
+
+  const img = document.createElement("img");
+  img.src = src;
+  img.alt = alt;
+  img.style.maxWidth = "90%";
+  img.style.maxHeight = "90%";
+  popup.appendChild(img);
+
+  document.body.appendChild(popup);
+}
+
+function loadCanteenImages() {
+  const gallery = document.getElementById('canteen-gallery');
+  gallery.innerHTML = '';
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const storageRef = firebase.storage().ref("canteen");
+
+  storageRef.listAll().then(res => {
+    const items = res.items.sort((a, b) => a.name.localeCompare(b.name));
+    items.forEach(itemRef => {
+      const fileName = itemRef.name;
+      const fileDate = new Date("20" + fileName.substring(0, 2), parseInt(fileName.substring(2, 4)) - 1, fileName.substring(4, 6));
+
+      if (fileDate < today) {
+        itemRef.delete();
+      } else {
+        itemRef.getDownloadURL().then(url => {
+          const container = document.createElement("div");
+          container.style.position = "relative";
+
+          const img = document.createElement("img");
+          img.src = url;
+          img.alt = fileName;
+          img.style.maxWidth = "150px";
+          img.style.maxHeight = "150px";
+          img.style.border = "1px solid #ccc";
+          img.style.cursor = "pointer";
+          img.onclick = () => {
+            if (editMode) {
+              if (selectedToDelete.has(fileName)) {
+                selectedToDelete.delete(fileName);
+                img.style.border = "1px solid #ccc";
+              } else {
+                selectedToDelete.add(fileName);
+                img.style.border = "3px solid red";
+              }
+            } else {
+              enlargeImage(url, fileName);
+            }
+          };
+
+          container.appendChild(img);
+          gallery.appendChild(container);
+        });
+      }
+    });
+  });
+}
+</script>
+<script>
+let editMode = false;
+let selectedToDelete = new Set();
+
+function toggleEditMode() {
+  editMode = !editMode;
+  selectedToDelete.clear();
+  loadCanteenImages();
+}
+
+function deleteSelectedImages() {
+  const storageRef = firebase.storage().ref("canteen");
+  selectedToDelete.forEach(name => {
+    storageRef.child(name).delete().then(() => {
+      selectedToDelete.delete(name);
+      loadCanteenImages();
+    });
+  });
+}
+
+function enlargeImage(src, alt) {
+  const popup = document.createElement("div");
+  popup.style.position = "fixed";
+  popup.style.top = "0";
+  popup.style.left = "0";
+  popup.style.width = "100vw";
+  popup.style.height = "100vh";
+  popup.style.background = "rgba(0,0,0,0.8)";
+  popup.style.display = "flex";
+  popup.style.alignItems = "center";
+  popup.style.justifyContent = "center";
+  popup.style.zIndex = "10000";
+  popup.onclick = () => document.body.removeChild(popup);
+
+  const img = document.createElement("img");
+  img.src = src;
+  img.alt = alt;
+  img.style.maxWidth = "90%";
+  img.style.maxHeight = "90%";
+  popup.appendChild(img);
+
+  document.body.appendChild(popup);
+}
+
+function loadCanteenImages() {
+  const gallery = document.getElementById('canteen-gallery');
+  gallery.innerHTML = '';
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const storageRef = firebase.storage().ref("canteen");
+
+  storageRef.listAll().then(res => {
+    const items = res.items.sort((a, b) => a.name.localeCompare(b.name));
+    items.forEach(itemRef => {
+      const fileName = itemRef.name;
+      const fileDate = new Date("20" + fileName.substring(0, 2), parseInt(fileName.substring(2, 4)) - 1, fileName.substring(4, 6));
+
+      if (fileDate < today) {
+        itemRef.delete();
+      } else {
+        itemRef.getDownloadURL().then(url => {
+          const container = document.createElement("div");
+          container.style.position = "relative";
+
+          const img = document.createElement("img");
+          img.src = url;
+          img.alt = fileName;
+          img.style.maxWidth = "150px";
+          img.style.maxHeight = "150px";
+          img.style.border = "1px solid #ccc";
+          img.style.margin = "5px";
+          img.style.cursor = "pointer";
+
+          img.onclick = () => {
+            if (editMode) {
+              if (selectedToDelete.has(fileName)) {
+                selectedToDelete.delete(fileName);
+                img.style.border = "1px solid #ccc";
+              } else {
+                selectedToDelete.add(fileName);
+                img.style.border = "3px solid red";
+              }
+            } else {
+              enlargeImage(url, fileName);
+            }
+          };
+
+          container.appendChild(img);
+          gallery.appendChild(container);
+        });
+      }
+    });
+  });
+}
+
+function goToLogin() {
+  document.getElementById('form-section').classList.remove('active');
+  document.getElementById('login-section').classList.add('active');
+  document.getElementById('canteen-section').style.display = 'none';
+  currentUser = null;
 }
 </script>
 </body>
