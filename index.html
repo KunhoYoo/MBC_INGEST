@@ -206,6 +206,58 @@ body {
 }
 </style>
 
+
+<style>
+  #weekly-canteen {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    padding: 10px;
+  }
+  .day-cell {
+    background: white;
+    border: 1px solid #ccc;
+    padding: 6px;
+    border-radius: 5px;
+    text-align: center;
+  }
+  .day-title {
+    font-weight: bold;
+    margin-bottom: 6px;
+  }
+  .image-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 6px;
+  }
+  .image-grid img {
+    width: 100%;
+    max-width: 592px;
+    height: auto;
+    object-fit: cover;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .button-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+  }
+  .small-btn {
+    font-size: 0.7rem;
+    padding: 4px 10px;
+    background: #004080;
+    color: white;
+    font-weight: 600;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+</style>
+
 </head>
 <body>
 <div id="login-logo-wrapper" style="display: none;"><br/><br/><br/><br/><br/><br/><br/><br/><img alt="MBC 인제스트 Note" onclick="goToLogin();" src="title_logo.png" style="cursor:pointer; max-width: 400px; width: 50%; height: auto; margin: 30px auto 10px auto; display: block;"/></div>
@@ -524,18 +576,7 @@ function loadCanteenImages() {
   }
 }
 </script>
-<div id="canteen-section" style="display:none; text-align:center; margin-top:30px;">
-<div id="loading-spinner" style="display:none;margin-top:10px;">
-<span style="color:#004080;font-weight:bold;">이미지 불러오는 중...</span>
-</div>
-<div class="slider-wrapper" id="canteen-gallery" style="display: block;">&lt;div class="slider-container" id="sliderContainer"&gt;&lt;/div&gt;&lt;div class="slider-nav"&gt;&lt;button onclick="prevSlide()"&gt;이전&lt;/button&gt;&lt;button onclick="nextSlide()"&gt;다음&lt;/button&gt;&lt;/div&gt;</div>
-<div id="canteen-controls" style="margin-top:20px;">
-<label for="canteen-upload" style="background:#004080;color:white;padding:0.5rem 1.5rem;border-radius:5px;cursor:pointer;margin-right:10px;display:inline-block;font-family:'Nanum Barun Gothic',sans-serif;font-size:14px;font-weight:normal;">추가</label>
-<input accept="image/*" id="canteen-upload" multiple="" onchange="handleCanteenUpload(event)" style="display:none;" type="file"/>
-<button onclick="toggleEditMode()" style="background:#004080;color:white;padding:0.5rem 1.5rem;border-radius:5px;cursor:pointer;margin-right:10px;display:inline-block;font-family:'Nanum Barun Gothic',sans-serif;font-size:14px;font-weight:normal;">편집</button>
-<button onclick="deleteSelectedImages()" style="background:#004080;color:white;padding:0.5rem 1.5rem;border-radius:5px;cursor:pointer;margin-right:10px;display:inline-block;font-family:'Nanum Barun Gothic',sans-serif;font-size:14px;font-weight:normal;">삭제</button>
-</div>
-</div>
+
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
 <script>
 function showCanteen() {
@@ -574,8 +615,7 @@ function loadCanteenImages() {
 
   const storageRef = firebase.storage().ref("canteen");
   storageRef.listAll().then(res => {
-    const sortedItems = res.items.sort((a, b) => a.name.localeCompare(b.name));
-    sortedItems.forEach(itemRef => {
+    res.items.forEach(itemRef => {
       const fileName = itemRef.name;
       const fileDate = new Date("20" + fileName.substring(0, 2), parseInt(fileName.substring(2, 4)) - 1, fileName.substring(4, 6));
 
@@ -813,5 +853,130 @@ function nextSlide() {
 function prevSlide() {
   showSlide(currentSlide - 1);
 }
-</script></body>
+</script>
+<div id="canteen-section" style="display:none;">
+  <div id="weekly-canteen">
+    
+<div class="day-cell" id="day-월">
+  <div class="day-title">월</div>
+  <div class="image-grid" id="day-월-gallery"></div>
+  <div class="button-row">
+    <label class="small-btn" for="day-월-upload">추가</label>
+    <input type="file" id="day-월-upload" accept="image/*" style="display:none" onchange="handleDayUpload(event, 'day-월')"/>
+    <button class="small-btn" onclick="deleteDayImages('day-월')">삭제</button>
+  </div>
+</div>
+<div class="day-cell" id="day-화">
+  <div class="day-title">화</div>
+  <div class="image-grid" id="day-화-gallery"></div>
+  <div class="button-row">
+    <label class="small-btn" for="day-화-upload">추가</label>
+    <input type="file" id="day-화-upload" accept="image/*" style="display:none" onchange="handleDayUpload(event, 'day-화')"/>
+    <button class="small-btn" onclick="deleteDayImages('day-화')">삭제</button>
+  </div>
+</div>
+<div class="day-cell" id="day-수">
+  <div class="day-title">수</div>
+  <div class="image-grid" id="day-수-gallery"></div>
+  <div class="button-row">
+    <label class="small-btn" for="day-수-upload">추가</label>
+    <input type="file" id="day-수-upload" accept="image/*" style="display:none" onchange="handleDayUpload(event, 'day-수')"/>
+    <button class="small-btn" onclick="deleteDayImages('day-수')">삭제</button>
+  </div>
+</div>
+<div class="day-cell" id="day-목">
+  <div class="day-title">목</div>
+  <div class="image-grid" id="day-목-gallery"></div>
+  <div class="button-row">
+    <label class="small-btn" for="day-목-upload">추가</label>
+    <input type="file" id="day-목-upload" accept="image/*" style="display:none" onchange="handleDayUpload(event, 'day-목')"/>
+    <button class="small-btn" onclick="deleteDayImages('day-목')">삭제</button>
+  </div>
+</div>
+<div class="day-cell" id="day-금">
+  <div class="day-title">금</div>
+  <div class="image-grid" id="day-금-gallery"></div>
+  <div class="button-row">
+    <label class="small-btn" for="day-금-upload">추가</label>
+    <input type="file" id="day-금-upload" accept="image/*" style="display:none" onchange="handleDayUpload(event, 'day-금')"/>
+    <button class="small-btn" onclick="deleteDayImages('day-금')">삭제</button>
+  </div>
+</div>
+<div class="day-cell" id="day-토">
+  <div class="day-title">토</div>
+  <div class="image-grid" id="day-토-gallery"></div>
+  <div class="button-row">
+    <label class="small-btn" for="day-토-upload">추가</label>
+    <input type="file" id="day-토-upload" accept="image/*" style="display:none" onchange="handleDayUpload(event, 'day-토')"/>
+    <button class="small-btn" onclick="deleteDayImages('day-토')">삭제</button>
+  </div>
+</div>
+<div class="day-cell" id="day-일">
+  <div class="day-title">일</div>
+  <div class="image-grid" id="day-일-gallery"></div>
+  <div class="button-row">
+    <label class="small-btn" for="day-일-upload">추가</label>
+    <input type="file" id="day-일-upload" accept="image/*" style="display:none" onchange="handleDayUpload(event, 'day-일')"/>
+    <button class="small-btn" onclick="deleteDayImages('day-일')">삭제</button>
+  </div>
+</div>
+  </div>
+</div>
+
+<script>
+function handleDayUpload(event, dayKey) {
+  const files = Array.from(event.target.files).slice(0, 3);
+  const gallery = document.getElementById(dayKey + '-gallery');
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const img = document.createElement("img");
+      img.src = e.target.result;
+      img.onclick = () => enlargeImage(e.target.result, file.name);
+      gallery.appendChild(img);
+      while (gallery.children.length > 3) {
+        gallery.removeChild(gallery.firstChild);
+      }
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function deleteDayImages(dayKey) {
+  const gallery = document.getElementById(dayKey + '-gallery');
+  gallery.innerHTML = "";
+}
+
+function enlargeImage(src, alt) {
+  const popup = document.createElement("div");
+  popup.style.position = "fixed";
+  popup.style.top = "0";
+  popup.style.left = "0";
+  popup.style.width = "100vw";
+  popup.style.height = "100vh";
+  popup.style.background = "rgba(0,0,0,0.8)";
+  popup.style.display = "flex";
+  popup.style.alignItems = "center";
+  popup.style.justifyContent = "center";
+  popup.style.zIndex = "10000";
+  popup.onclick = () => document.body.removeChild(popup);
+
+  const img = document.createElement("img");
+  img.src = src;
+  img.alt = alt;
+  img.style.maxWidth = "90%";
+  img.style.maxHeight = "90%";
+  popup.appendChild(img);
+
+  document.body.appendChild(popup);
+}
+
+function showCanteen() {
+  document.getElementById('login-section').style.display = 'none';
+  document.getElementById('form-section').style.display = 'none';
+  document.getElementById('canteen-section').style.display = 'block';
+}
+</script>
+
+</body>
 </html>
