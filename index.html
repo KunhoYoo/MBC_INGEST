@@ -309,10 +309,16 @@
   }
 
 
+
 function parseSMSAndInsert() {
   const sms = document.getElementById('sms-text').value.trim();
   const firstLine = sms.split('\n')[0];
-  const [title, reporter, third] = firstLine.split(',').map(e => e.trim());
+  const parts = firstLine.split(',').map(e => e.trim());
+
+  const title = parts[0] || "";
+  const reporter = parts[1] || "";
+  const third = parts[2] || "";
+  const location = parts[4] || "";
 
   const VJ_NAMES = [
     "이주혁", "독고명", "김백승", "강재훈", "이관호", 
@@ -334,15 +340,22 @@ function parseSMSAndInsert() {
     const isVJ = VJ_NAMES.includes(third);
     if (isVJ) {
       document.getElementById('vj').value = third;
+      document.getElementById('equipment').value = "6mm";
     } else {
       document.getElementById('videographer').value = third;
+      document.getElementById('equipment').value = "ENG";
     }
     document.getElementById('client').value = third;
+  }
+
+  if (location) {
+    document.getElementById('location').value = location;
   }
 
   closeSMSPopup();
   saveData();
 }
+
 
 
   document.getElementById('login-code').addEventListener('keydown', function(event) {
