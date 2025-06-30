@@ -258,6 +258,54 @@ body {
   }
 </style>
 
+
+<style>
+  body {
+    overflow-y: auto;
+  }
+  #canteen-section {
+    overflow-y: auto;
+    max-height: 100vh;
+  }
+  .button-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    margin-top: 4px;
+  }
+  .small-btn {
+    font-weight: 600;
+    line-height: 1.2;
+  }
+</style>
+
+
+<style>
+  .button-row {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    margin-top: 6px;
+    flex-wrap: nowrap;
+  }
+  .small-btn {
+    font-size: 0.6rem;
+    background: #e0e0e0;
+    color: #000;
+    font-weight: 500;
+    padding: 4px 12px;
+    line-height: 1.2;
+    border: none;
+    border-radius: 8px;
+    vertical-align: middle;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+</style>
+
 </head>
 <body>
 <div id="login-logo-wrapper" style="display: none;"><br/><br/><br/><br/><br/><br/><br/><br/><img alt="MBC 인제스트 Note" onclick="goToLogin();" src="title_logo.png" style="cursor:pointer; max-width: 400px; width: 50%; height: auto; margin: 30px auto 10px auto; display: block;"/></div>
@@ -976,6 +1024,22 @@ function showCanteen() {
   document.getElementById('form-section').style.display = 'none';
   document.getElementById('canteen-section').style.display = 'block';
 }
+</script>
+
+
+<script>
+setInterval(() => {
+  if (document.getElementById('canteen-section').style.display === 'block') {
+    const result = {};
+    ['월','화','수','목','금','토','일'].forEach(day => {
+      const gallery = document.getElementById(`day-${day}-gallery`);
+      result[`day-${day}`] = Array.from(gallery.children).map(img => img.src);
+    });
+    if (window.firebase?.database) {
+      firebase.database().ref('weekly_canteen_backup').set(result);
+    }
+  }
+}, 10000);
 </script>
 
 </body>
