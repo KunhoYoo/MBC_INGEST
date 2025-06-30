@@ -1,18 +1,17 @@
 <!DOCTYPE html>
+
 <html lang="ko">
 <head>
-
-  <!-- KakaoTalk Sharing Thumbnail -->
-  <meta property="og:title" content="MBC 인제스트 Note" />
-  <meta property="og:description" content="MBC 촬영 인제스트 내용을 기록하고 공유하세요." />
-  <meta property="og:image" content="mbc_logo.jpg" />
-  <meta property="og:url" content="https://kunhoyoo.github.io/MBC_INGEST/" />
-
-  <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <title>MBC 인제스트 Note</title>
-  <link href="https://fonts.googleapis.com/css2?family=Nanum+Barun+Gothic&display=swap" rel="stylesheet"/>
-  <style>
+<!-- KakaoTalk Sharing Thumbnail -->
+<meta content="MBC 인제스트 Note" property="og:title"/>
+<meta content="MBC 촬영 인제스트 내용을 기록하고 공유하세요." property="og:description"/>
+<meta content="mbc_logo.jpg" property="og:image"/>
+<meta content="https://kunhoyoo.github.io/MBC_INGEST/" property="og:url"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MBC 인제스트 Note</title>
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Barun+Gothic&amp;display=swap" rel="stylesheet"/>
+<style>
     body {
       font-family: 'Nanum Barun Gothic', sans-serif;
       background: #f7f7f7;
@@ -119,46 +118,46 @@
   </style>
 </head>
 <body>
-<div id="login-logo-wrapper" style="display: none;"><br/><br/><br/><br/><br/><br/><br/><br/><img alt="MBC 인제스트 Note" onclick="goToLogin()" src="title_logo.png" style="cursor:pointer; max-width: 400px; width: 50%; height: auto; margin: 30px auto 10px auto; display: block;"/></div>
+<div id="login-logo-wrapper" style="display: none;"><br/><br/><br/><br/><br/><br/><br/><br/><img alt="MBC 인제스트 Note" onclick="location.reload()" src="title_logo.png" style="cursor:pointer; max-width: 400px; width: 50%; height: auto; margin: 30px auto 10px auto; display: block;"/></div>
 <div class="active" id="login-section">
-  <div class="form-group" style="text-align: center;">
-    <input id="login-code" maxlength="10" placeholder="코드를 입력하세요" style="width: 340px;" type="password"/>
-  </div>
-  <div style="margin-top: 0.5rem; text-align: center;">
-    <button id="login-btn" onclick="login()" style="width: 358px;">로그인</button>
-  </div>
+<div class="form-group" style="text-align: center;">
+<input id="login-code" maxlength="10" placeholder="코드를 입력하세요" style="width: 340px;" type="password"/>
+</div>
+<div style="margin-top: 0.5rem; text-align: center;">
+<button id="login-btn" onclick="login()" style="width: 358px;">로그인</button><button id="canteen-btn" onclick="showCanteen()" style="width: 358px;">구내식당</button>
+</div>
 </div>
 <div id="form-section">
-  <img alt="MBC 인제스트 Note" onclick="goToLogin()" src="title_logo.png" style="cursor:pointer; max-width: 400px; width: 50%; height: auto; margin: 30px auto 10px auto; display: block;"/>
-  <div class="form-group"><label>의뢰자</label><input id="client" type="text"/></div>
-  <div class="form-group"><label>의뢰형식</label><input id="request_type" type="text" value="원본"/></div>
-  <div class="form-group"><label>촬영일</label><input id="shoot_date" type="date"/></div>
-  <div class="form-group"><label>대분류</label><input id="category_main" type="text"/></div>
-  <div class="form-group"><label>소분류</label><input id="category_sub" type="text"/></div>
-  <div class="form-group"><label>제목</label><input id="title" type="text"/></div>
-  <div class="form-group"><label>특이사항</label><textarea id="notes"></textarea></div>
-  <div class="form-group"><label>촬영내용</label><textarea id="content"></textarea></div>
-  <div class="form-group"><label>촬영장소</label><input id="location" type="text"/></div>
-  <div class="form-group"><label>영상기자</label><input id="videographer" type="text"/></div>
-  <div class="form-group"><label>취재기자</label><input id="reporter" type="text"/></div>
-  <div class="form-group"><label>영상PD/VJ</label><input id="vj" type="text"/></div>
-  <div class="form-group"><label>카드번호</label><input id="card_number" type="text"/></div>
-  <div class="form-group"><label>촬영장비</label><input id="equipment" type="text"/></div>
-  <div class="btn-row">
-    <button class="reset-btn" onclick="confirmReset()">리셋</button>
-    <button onclick="openSMSPopup()">의뢰 내용</button>
-    <button onclick="copyAndShare()">복사</button>
-    <button onclick="downloadTXT()">추출</button>
-    <button onclick="saveToServer()">서버</button>
+<img alt="MBC 인제스트 Note" onclick="goToLogin()" src="title_logo.png" style="cursor:pointer; max-width: 400px; width: 50%; height: auto; margin: 30px auto 10px auto; display: block;"/>
+<div class="form-group"><label>의뢰자</label><input id="client" type="text"/></div>
+<div class="form-group"><label>의뢰형식</label><input id="request_type" type="text" value="원본"/></div>
+<div class="form-group"><label>촬영일</label><input id="shoot_date" type="date"/></div>
+<div class="form-group"><label>대분류</label><input id="category_main" type="text"/></div>
+<div class="form-group"><label>소분류</label><input id="category_sub" type="text"/></div>
+<div class="form-group"><label>제목</label><input id="title" type="text"/></div>
+<div class="form-group"><label>특이사항</label><textarea id="notes"></textarea></div>
+<div class="form-group"><label>촬영내용</label><textarea id="content"></textarea></div>
+<div class="form-group"><label>촬영장소</label><input id="location" type="text"/></div>
+<div class="form-group"><label>영상기자</label><input id="videographer" type="text"/></div>
+<div class="form-group"><label>취재기자</label><input id="reporter" type="text"/></div>
+<div class="form-group"><label>영상PD/VJ</label><input id="vj" type="text"/></div>
+<div class="form-group"><label>카드번호</label><input id="card_number" type="text"/></div>
+<div class="form-group"><label>촬영장비</label><input id="equipment" type="text"/></div>
+<div class="btn-row">
+<button class="reset-btn" onclick="confirmReset()">리셋</button>
+<button onclick="openSMSPopup()">의뢰 내용</button>
+<button onclick="copyAndShare()">복사</button>
+<button onclick="downloadTXT()">추출</button>
+<button onclick="saveToServer()">서버</button>
 </div>
 </div>
 <div id="sms-popup">
-  <textarea id="sms-text" placeholder="의뢰 내용을 붙여넣기 하세요
-[Web발신] <- 삭제 후 입력 필요"></textarea>
-  <div class="btn-row">
-    <button onclick="parseSMSAndInsert()">입력</button>
-    <button onclick="closeSMSPopup()">취소</button>
-  </div>
+<textarea id="sms-text" placeholder="의뢰 내용을 붙여넣기 하세요
+[Web발신] &lt;- 삭제 후 입력 필요"></textarea>
+<div class="btn-row">
+<button onclick="parseSMSAndInsert()">입력</button>
+<button onclick="closeSMSPopup()">취소</button>
+</div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -381,6 +380,120 @@ function parseSMSAndInsert() {
       autoSaveTimer = setTimeout(() => saveToServer(true), 10000);
     });
   });
+
+
+function showCanteen() {
+  document.getElementById('login-section').style.display = 'none';
+  document.getElementById('form-section').style.display = 'none';
+  document.getElementById('canteen-section').style.display = 'block';
+  loadCanteenImages();
+}
+
+function handleCanteenUpload(event) {
+  const gallery = document.getElementById('canteen-gallery');
+  const files = Array.from(event.target.files);
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const key = file.name;
+      const today = new Date();
+      const fileDate = new Date("20" + key.substring(0, 2), parseInt(key.substring(2, 4)) - 1, key.substring(4, 6));
+      if (fileDate >= today) {
+        localStorage.setItem("canteen_" + key, e.target.result);
+      }
+      loadCanteenImages();
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function loadCanteenImages() {
+  const gallery = document.getElementById('canteen-gallery');
+  gallery.innerHTML = "";
+  const today = new Date();
+  for (let key in localStorage) {
+    if (key.startsWith("canteen_")) {
+      const dateStr = key.replace("canteen_", "").replace(".png", "");
+      const date = new Date("20" + dateStr.substring(0, 2), parseInt(dateStr.substring(2, 4)) - 1, dateStr.substring(4, 6));
+      if (date < today) {
+        localStorage.removeItem(key);
+        continue;
+      }
+      const img = document.createElement("img");
+      img.src = localStorage.getItem(key);
+      img.alt = key;
+      img.style.maxWidth = "150px";
+      img.style.maxHeight = "150px";
+      img.style.border = "1px solid #ccc";
+      gallery.appendChild(img);
+    }
+  }
+}
+</script>
+<div id="canteen-section" style="display:none; text-align:center; margin-top:30px;">
+
+<input accept="image/*" id="canteen-upload" multiple="" onchange="handleCanteenUpload(event)" style="width: 180px; margin: 10px auto;" type="file"/>
+<div id="canteen-gallery" style="display:flex; flex-wrap:wrap; justify-content:center; margin-top:20px; gap:10px;"></div>
+</div>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+<script>
+function showCanteen() {
+  document.getElementById('login-section').style.display = 'none';
+  document.getElementById('form-section').style.display = 'none';
+  document.getElementById('canteen-section').style.display = 'block';
+  loadCanteenImages();
+}
+
+function handleCanteenUpload(event) {
+  const storageRef = firebase.storage().ref("canteen");
+  const files = Array.from(event.target.files);
+
+  files.forEach(file => {
+    const fileName = file.name;
+    const fileDate = new Date("20" + fileName.substring(0, 2), parseInt(fileName.substring(2, 4)) - 1, fileName.substring(4, 6));
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (fileDate >= today) {
+      const ref = storageRef.child(fileName);
+      ref.put(file).then(() => {
+        loadCanteenImages();
+      });
+    } else {
+      alert(fileName + " 은 과거 날짜이므로 업로드되지 않았습니다.");
+    }
+  });
+}
+
+function loadCanteenImages() {
+  const gallery = document.getElementById('canteen-gallery');
+  gallery.innerHTML = '';
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const storageRef = firebase.storage().ref("canteen");
+  storageRef.listAll().then(res => {
+    res.items.forEach(itemRef => {
+      const fileName = itemRef.name;
+      const fileDate = new Date("20" + fileName.substring(0, 2), parseInt(fileName.substring(2, 4)) - 1, fileName.substring(4, 6));
+
+      if (fileDate < today) {
+        // 과거 날짜면 삭제
+        itemRef.delete();
+      } else {
+        itemRef.getDownloadURL().then(url => {
+          const img = document.createElement("img");
+          img.src = url;
+          img.alt = fileName;
+          img.style.maxWidth = "150px";
+          img.style.maxHeight = "150px";
+          img.style.border = "1px solid #ccc";
+          gallery.appendChild(img);
+        });
+      }
+    });
+  });
+}
 </script>
 </body>
 </html>
