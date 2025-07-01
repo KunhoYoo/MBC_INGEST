@@ -523,31 +523,15 @@ function handleMealUpload(event) {
       const key = 'meal_' + Date.now();
       const dataUrl = e.target.result;
 
-      // 저장
-      localStorage.setItem(key, dataUrl);
-
-      // 갤러리에 바로 표시
-      const gallery = document.getElementById('meal-gallery');
-      const img = document.createElement('img');
-      img.src = dataUrl;
-      img.alt = key;
-      img.style.maxWidth = '100%';
-      img.style.height = 'auto';
-      img.style.cursor = 'pointer';
-      img.onclick = () => {
-        document.querySelectorAll('#meal-gallery img').forEach(i => i.style.border = '1px solid #ccc');
-        img.style.border = '3px solid red';
-        selectedMealImg = key;
-      };
-      gallery.appendChild(img);
-
-      // Firebase 업로드
+      // 🔥 Upload to Firebase Storage only
       const blob = dataURLtoBlob(dataUrl);
       const ref = storageRef.child(key + ".png");
+
       ref.put(blob)
         .then(() => {
           console.log("✅ 업로드 성공:", key);
           alert("사진이 서버에 업로드 되었습니다.");
+          loadMealImagesFromFirebase(); // show from server
         })
         .catch((err) => {
           console.error("❌ 업로드 실패:", key, err);
