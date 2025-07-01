@@ -124,7 +124,8 @@
 <input id="login-code" maxlength="10" placeholder="코드를 입력하세요" style="width: 340px;" type="password"/>
 </div>
 <div style="margin-top: 0.5rem; text-align: center;">
-<button id="login-btn" onclick="login()" style="width: 358px;">로그인</button><button id="canteen-btn" onclick="showCanteen()" style="width: 358px;">구내식당(개발중)</button>
+<button id="login-btn" onclick="login()" style="width: 358px;">로그인</button>
+<button id="meal-btn" onclick="showMealPage()" style="width: 358px;">식단</button>
 </div>
 </div>
 <div id="form-section">
@@ -430,12 +431,7 @@ function loadCanteenImages() {
   }
 }
 </script>
-<div id="canteen-section" style="display:none; text-align:center; margin-top:30px;">
 
-<input accept="image/*" id="canteen-upload" multiple="" onchange="handleCanteenUpload(event)" style="width: 180px; margin: 10px auto;" type="file"/>
-<div id="canteen-gallery" style="display:flex; flex-wrap:wrap; justify-content:center; margin-top:20px; gap:10px;"></div>
-</div>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
 <script>
 function showCanteen() {
   document.getElementById('login-section').style.display = 'none';
@@ -495,5 +491,103 @@ function loadCanteenImages() {
   });
 }
 </script>
+
+<div id="meal-section" style="display:none; text-align:center; margin-top:30px;">
+  <input type="file" id="meal-upload" accept="image/*" style="display:none;" multiple onchange="handleMealUpload(event)" />
+  <div style="display:flex; justify-content:center; gap:10px; margin-bottom:10px;">
+    <button onclick="document.getElementById('meal-upload').click()">추가</button>
+    <button onclick="deleteSelectedMealImage()">삭제</button>
+    <button onclick="syncMealToFirebase()">서버</button>
+    <button onclick="downloadMealImage()">다운</button>
+  </div>
+  <div id="meal-gallery" style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px;"></div>
+</div>
+<script>
+let selectedMealImg = null;
+
+function showMealPage() {
+  document.getElementById('login-section').style.display = 'none';
+  document.getElementById('form-section').style.display = 'none';
+  document.getElementById('meal-section').style.display = 'block';
+  loadMealImages();
+}
+
+function handleMealUpload(event) {
+  const files = Array.from(event.target.files);
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const key = 'meal_' + Date.now();
+      localStorage.setItem(key, e.target.result);
+      loadMealImages();
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function loadMealImages() {
+  const gallery = document.getElementById('meal-gallery');
+  gallery.innerHTML = '';
+  for (let key in localStorage) {
+    if (key.startsWith('meal_')) {
+      const img = document.createElement('img');
+      img.src = localStorage.getItem(key);
+      img.alt = key;
+      img.style.maxWidth = '100%';
+      img.style.height = 'auto';
+      img.style.cursor = 'pointer';
+      img.onclick = () => {
+        document.querySelectorAll('#meal-gallery img').forEach(i => i.style.border = '1px solid #ccc');
+        img.style.border = '3px solid red';
+        selectedMealImg = key;
+      };
+      gallery.appendChild(img);
+    }
+  }
+}
+
+function deleteSelectedMealImage() {
+  if (selectedMealImg && localStorage.getItem(selectedMealImg)) {
+    localStorage.removeItem(selectedMealImg);
+    selectedMealImg = null;
+    loadMealImages();
+  } else {
+    alert("삭제할 이미지를 선택하세요.");
+  }
+}
+
+function syncMealToFirebase() {
+  const storageRef = firebase.storage().ref("meal");
+  for (let key in localStorage) {
+    if (key.startsWith("meal_")) {
+      const dataUrl = localStorage.getItem(key);
+      const file = dataURLtoBlob(dataUrl);
+      const ref = storageRef.child(key + ".png");
+      ref.put(file);
+    }
+  }
+  alert("동기화 완료");
+}
+
+function dataURLtoBlob(dataurl) {
+  const arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+  while(n--) u8arr[n] = bstr.charCodeAt(n);
+  return new Blob([u8arr], {type:mime});
+}
+
+function downloadMealImage() {
+  if (selectedMealImg) {
+    const dataUrl = localStorage.getItem(selectedMealImg);
+    const a = document.createElement('a');
+    a.href = dataUrl;
+    a.download = selectedMealImg + ".png";
+    a.click();
+  } else {
+    alert("다운로드할 이미지를 선택하세요.");
+  }
+}
+</script>
+
 </body>
 </html>
