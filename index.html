@@ -498,7 +498,7 @@ function loadCanteenImages() {
   <div style="display:flex; justify-content:center; gap:10px; margin-bottom:10px;">
     <button onclick="document.getElementById('meal-upload').click()">추가</button>
     <button onclick="deleteSelectedMealImage()">삭제</button>
-    <button onclick="syncMealToFirebase()">서버</button>
+    
     <button onclick="downloadMealImage()">다운</button>
   </div>
   <div id="meal-gallery" style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px;"></div>
@@ -515,18 +515,48 @@ function showMealPage() {
 
 function handleMealUpload(event) {
   const files = Array.from(event.target.files);
+  const storageRef = firebase.storage().ref("meal");
+
   files.forEach(file => {
     const reader = new FileReader();
     reader.onload = function(e) {
       const key = 'meal_' + Date.now();
-      localStorage.setItem(key, e.target.result);
-      loadMealImages();
+      const dataUrl = e.target.result;
+
+      // 저장
+      localStorage.setItem(key, dataUrl);
+
+      // 갤러리에 바로 표시
+      const gallery = document.getElementById('meal-gallery');
+      const img = document.createElement('img');
+      img.src = dataUrl;
+      img.alt = key;
+      img.style.maxWidth = '100%';
+      img.style.height = 'auto';
+      img.style.cursor = 'pointer';
+      img.onclick = () => {
+        document.querySelectorAll('#meal-gallery img').forEach(i => i.style.border = '1px solid #ccc');
+        img.style.border = '3px solid red';
+        selectedMealImg = key;
+      };
+      gallery.appendChild(img);
+
+      // Firebase 업로드
+      const blob = dataURLtoBlob(dataUrl);
+      const ref = storageRef.child(key + ".png");
+      ref.put(blob)
+        .then(() => {
+          console.log("✅ 업로드 성공:", key);
+          alert("사진이 서버에 업로드 되었습니다.");
+        })
+        .catch((err) => {
+          console.error("❌ 업로드 실패:", key, err);
+          alert("업로드 실패: " + key);
+        });
     };
     reader.readAsDataURL(file);
   });
-}
-
-function loadMealImages() {
+}function loadMealImages() {
   const gallery = document.getElementById('meal-gallery');
   gallery.innerHTML = '';
   for (let key in localStorage) {
@@ -557,18 +587,6 @@ function deleteSelectedMealImage() {
   }
 }
 
-function syncMealToFirebase() {
-  const storageRef = firebase.storage().ref("meal");
-  for (let key in localStorage) {
-    if (key.startsWith("meal_")) {
-      const dataUrl = localStorage.getItem(key);
-      const file = dataURLtoBlob(dataUrl);
-      const ref = storageRef.child(key + ".png");
-      ref.put(file);
-    }
-  }
-  alert("동기화 완료");
-}
 
 function dataURLtoBlob(dataurl) {
   const arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
@@ -620,44 +638,6 @@ function loadMealImagesFromFirebase() {
 }
 
 // 🟢 서버 버튼 개선 - 성공/실패 팝업
-function syncMealToFirebase() {
-  const storageRef = firebase.storage().ref("meal");
-  const mealKeys = Object.keys(localStorage).filter(key => key.startsWith("meal_"));
-  if (mealKeys.length === 0) {
-    alert("업로드할 이미지가 없습니다.");
-    return;
-  }
-
-  let successCount = 0;
-  let failCount = 0;
-  let total = mealKeys.length;
-
-  mealKeys.forEach(key => {
-    const dataUrl = localStorage.getItem(key);
-    const file = dataURLtoBlob(dataUrl);
-    const ref = storageRef.child(key + ".png");
-
-    ref.put(file)
-      .then(() => {
-        successCount++;
-        checkDone();
-      })
-      .catch(() => {
-        failCount++;
-        checkDone();
-      });
-  });
-
-  function checkDone() {
-    if (successCount + failCount === total) {
-      if (failCount === 0) {
-        alert("서버에 동기화 완료!");
-      } else {
-        alert(\`일부 실패: \${failCount}개 이미지 업로드 실패\`);
-      }
-    }
-  }
-}
 
 // 🔁 showMealPage 수정 - Firebase에서 이미지 로드
 function showMealPage() {
