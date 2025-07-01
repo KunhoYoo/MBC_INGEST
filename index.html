@@ -589,5 +589,83 @@ function downloadMealImage() {
 }
 </script>
 
+
+<script>
+// 🟢 새로 추가된 Firebase 이미지 로드 함수
+function loadMealImagesFromFirebase() {
+  const gallery = document.getElementById('meal-gallery');
+  gallery.innerHTML = '';
+  const storageRef = firebase.storage().ref("meal");
+  storageRef.listAll().then(res => {
+    res.items.forEach(itemRef => {
+      itemRef.getDownloadURL().then(url => {
+        const img = document.createElement('img');
+        img.src = url;
+        img.alt = itemRef.name;
+        img.style.maxWidth = '100%';
+        img.style.height = 'auto';
+        img.style.cursor = 'pointer';
+        img.onclick = () => {
+          document.querySelectorAll('#meal-gallery img').forEach(i => i.style.border = '1px solid #ccc');
+          img.style.border = '3px solid red';
+          selectedMealImg = itemRef.name.replace(".png", "");
+        };
+        gallery.appendChild(img);
+      });
+    });
+  }).catch(err => {
+    alert("이미지 로딩 실패: " + err.message);
+  });
+}
+
+// 🟢 서버 버튼 개선 - 성공/실패 팝업
+function syncMealToFirebase() {
+  const storageRef = firebase.storage().ref("meal");
+  const mealKeys = Object.keys(localStorage).filter(key => key.startsWith("meal_"));
+  if (mealKeys.length === 0) {
+    alert("업로드할 이미지가 없습니다.");
+    return;
+  }
+
+  let successCount = 0;
+  let failCount = 0;
+  let total = mealKeys.length;
+
+  mealKeys.forEach(key => {
+    const dataUrl = localStorage.getItem(key);
+    const file = dataURLtoBlob(dataUrl);
+    const ref = storageRef.child(key + ".png");
+
+    ref.put(file)
+      .then(() => {
+        successCount++;
+        checkDone();
+      })
+      .catch(() => {
+        failCount++;
+        checkDone();
+      });
+  });
+
+  function checkDone() {
+    if (successCount + failCount === total) {
+      if (failCount === 0) {
+        alert("서버에 동기화 완료!");
+      } else {
+        alert(\`일부 실패: \${failCount}개 이미지 업로드 실패\`);
+      }
+    }
+  }
+}
+
+// 🔁 showMealPage 수정 - Firebase에서 이미지 로드
+function showMealPage() {
+  document.getElementById('login-section').style.display = 'none';
+  document.getElementById('form-section').style.display = 'none';
+  document.getElementById('meal-section').style.display = 'block';
+  loadMealImagesFromFirebase();
+}
+</script>
+
 </body>
 </html>
