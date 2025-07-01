@@ -5,3 +5,4 @@
 복사 - 인덱스 내용 클립보드에 복사<br>
 추출 - txt파일 다운로드<br>
 서버 - 현재 로컬에만 저장되어있는 정보를 pc로도 연동 시킴 (수시로 해놓는게 좋음)<br>
+https://kunhoyoo.github.io/MBC_INGEST/
