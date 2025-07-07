@@ -629,7 +629,7 @@ async function fetchRealtimeNews() {
   tableBody.innerHTML = '';
 
   try {
-    const response = await fetch('https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent('https://search.naver.com/search.naver?where=news&sm=tab_jum&query=속보&sort=1'));
+    const response = await fetch('https://naver-news-proxy.kunho.workers.dev');
     const htmlText = await response.text();
 
     const parser = new DOMParser();
