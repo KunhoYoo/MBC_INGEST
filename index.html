@@ -612,6 +612,7 @@ function showMealPage() {
 
 </body>
 
+
 <script>
 function showRealtimePage() {
   document.getElementById('login-section').style.display = 'none';
@@ -634,27 +635,26 @@ async function fetchRealtimeNews() {
 
     const parser = new DOMParser();
     const doc = parser.parseFromString(htmlText, 'text/html');
-    const items = doc.querySelectorAll('.list_news div.news_area');
 
-    items.forEach((item, index) => {
-      if (index >= 20) return;
-      const titleEl = item.querySelector('a.news_tit');
-      const pressEl = item.querySelector('a.info.press');
+    const titles = Array.from(doc.querySelectorAll("a.news_tit"));
+    const presses = Array.from(doc.querySelectorAll("a.info.press"));
 
-      let title = titleEl?.title?.trim() || '제목 없음';
-      if (title.length > 25) title = title.slice(0, 25) + '...';
-      const press = pressEl?.textContent?.trim().replace(/언론사 선택|[·…]/g, '') || '언론사 없음';
-      const link = titleEl?.href || '#';
+    for (let i = 0; i < Math.min(titles.length, 20); i++) {
+      const title = titles[i]?.getAttribute("title") || "제목 없음";
+      const press = presses[i]?.textContent?.trim().replace(/언론사 선택|[·…]/g, '') || "언론사 없음";
+      const link = titles[i]?.getAttribute("href") || "#";
+
+      const shortTitle = title.length > 25 ? title.slice(0, 25) + "..." : title;
 
       const tr = document.createElement('tr');
       tr.innerHTML = `
-        <td style="padding:8px; border:1px solid #ccc;">${index + 1}</td>
-        <td style="padding:8px; border:1px solid #ccc;">${title}</td>
+        <td style="padding:8px; border:1px solid #ccc;">${i + 1}</td>
+        <td style="padding:8px; border:1px solid #ccc;">${shortTitle}</td>
         <td style="padding:8px; border:1px solid #ccc;">${press}</td>
         <td style="padding:8px; border:1px solid #ccc;"><a href="${link}" target="_blank">링크</a></td>
       `;
       tableBody.appendChild(tr);
-    });
+    }
   } catch (error) {
     console.error("뉴스 불러오기 실패:", error);
     const tr = document.createElement('tr');
