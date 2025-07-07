@@ -125,8 +125,7 @@
 </div>
 <div style="margin-top: 0.5rem; text-align: center;">
 <button id="login-btn" onclick="login()" style="width: 358px;">로그인</button>
-<button id="meal-btn" onclick="showMealPage()" style="width: 358px;">식단표</button>
-<button id="realtime-btn" onclick="showRealtimePage()" style="width: 358px;">실시간</button>
+<button id="meal-btn" onclick="showMealPage()" style="width: 358px;">식단표</button><button id="realtime-btn" onclick="showRealtimePage()" style="width: 358px;">실시간</button>
 </div>
 </div>
 <div id="form-section">
@@ -433,7 +432,6 @@ function loadCanteenImages() {
   }
 }
 </script>
-
 <script>
 function showCanteen() {
   document.getElementById('login-section').style.display = 'none';
@@ -493,14 +491,12 @@ function loadCanteenImages() {
   });
 }
 </script>
-
 <div id="meal-section" style="display:none; text-align:center; margin-top:30px;">
-  <img id="meal-image" src="meal.jpg" alt="식단 이미지" style="max-width:90%; height:auto; border:1px solid #ccc;" />
-  <div style="margin-top:10px;">
-    <button onclick="downloadMealImage()">다운로드</button>
-  </div>
+<img alt="식단 이미지" id="meal-image" src="meal.jpg" style="max-width:90%; height:auto; border:1px solid #ccc;"/>
+<div style="margin-top:10px;">
+<button onclick="downloadMealImage()">다운로드</button>
 </div>
-
+</div>
 <script>
 function showMealPage() {
   document.getElementById('login-section').style.display = 'none';
@@ -515,8 +511,6 @@ function downloadMealImage() {
   link.click();
 }
 </script>
-
-
 <script>
 // 🟢 새로 추가된 Firebase 이미지 로드 함수
 function loadMealImagesFromFirebase() {
@@ -593,24 +587,19 @@ function showMealPage() {
   loadMealImagesFromFirebase();
 }
 </script>
-
-
-<div id="realtime-section" style="display:none; margin-top:20px;">
-  <h2>실시간 속보 뉴스</h2>
-  <table id="realtime-table" style="width:90%; margin:auto; border-collapse: collapse;">
-    <thead>
-      <tr style="background:#004080; color:white;">
-        <th style="padding:8px;">순위</th>
-        <th style="padding:8px;">제목</th>
-        <th style="padding:8px;">뉴스사</th>
-        <th style="padding:8px;">링크</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+<div id="realtime-section" style="display:none; margin-top:20px;"><h2>실시간 속보 뉴스</h2>
+<table id="realtime-table" style="width:90%; margin:auto; border-collapse: collapse;">
+<thead>
+<tr style="background:#004080; color:white;">
+<th style="padding:8px;">순위</th>
+<th style="padding:8px;">제목</th>
+<th style="padding:8px;">뉴스사</th>
+<th style="padding:8px;">링크</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
 </div>
-
-</body>
 
 <script>
 function showRealtimePage() {
@@ -620,7 +609,7 @@ function showRealtimePage() {
   document.getElementById('realtime-section').style.display = 'block';
   fetchRealtimeNews();
   if (!window.realtimeInterval) {
-    window.realtimeInterval = setInterval(fetchRealtimeNews, 60000);
+    window.realtimeInterval = setInterval(fetchRealtimeNews, 10000); // 10초마다
   }
 }
 
@@ -635,13 +624,10 @@ async function fetchRealtimeNews() {
     const parser = new DOMParser();
     const doc = parser.parseFromString(htmlText, 'text/html');
 
-    const titles = Array.from(doc.querySelectorAll("a.news_tit"));
-    const presses = Array.from(doc.querySelectorAll("a.info.press"));
+    const headlines = Array.from(doc.querySelectorAll(".sds-comps-text.sds-comps-text-ellipsis.sds-comps-text-ellipsis-2.sds-comps-text-type-headline1"));
 
-    for (let i = 0; i < Math.min(titles.length, 20); i++) {
-      const title = titles[i]?.getAttribute("title") || "제목 없음";
-      const press = presses[i]?.textContent?.trim().replace(/언론사 선택|[·…]/g, '') || "언론사 없음";
-      const link = titles[i]?.getAttribute("href") || "#";
+    for (let i = 0; i < Math.min(headlines.length, 20); i++) {
+      const title = headlines[i]?.textContent?.trim() || "제목 없음";
 
       const shortTitle = title.length > 25 ? title.slice(0, 25) + "..." : title;
 
@@ -649,8 +635,8 @@ async function fetchRealtimeNews() {
       tr.innerHTML = `
         <td style="padding:8px; border:1px solid #ccc;">${i + 1}</td>
         <td style="padding:8px; border:1px solid #ccc;">${shortTitle}</td>
-        <td style="padding:8px; border:1px solid #ccc;">${press}</td>
-        <td style="padding:8px; border:1px solid #ccc;"><a href="${link}" target="_blank">링크</a></td>
+        <td style="padding:8px; border:1px solid #ccc;">N/A</td>
+        <td style="padding:8px; border:1px solid #ccc;"><a href="#" target="_blank">링크</a></td>
       `;
       tableBody.appendChild(tr);
     }
@@ -662,4 +648,6 @@ async function fetchRealtimeNews() {
   }
 }
 </script>
+
+</body>
 </html>
