@@ -126,6 +126,8 @@
 <div style="margin-top: 0.5rem; text-align: center;">
 <button id="login-btn" onclick="login()" style="width: 358px;">로그인</button>
 <button id="meal-btn" onclick="showMealPage()" style="width: 358px;">식단표</button>
+<button onclick="showAudioProcess()" style="width: 358px;">신입 확인</button>
+
 </div>
 </div>
 <div id="form-section">
@@ -584,7 +586,6 @@ function loadCanteenImages() {
   }
 }
 </script>
-
 <script>
 function showCanteen() {
   document.getElementById('login-section').style.display = 'none';
@@ -644,14 +645,12 @@ function loadCanteenImages() {
   });
 }
 </script>
-
 <div id="meal-section" style="display:none; text-align:center; margin-top:30px;">
-  <img id="meal-image" src="meal.jpg" alt="식단 이미지" style="max-width:90%; height:auto; border:1px solid #ccc;" />
-  <div style="margin-top:10px;">
-    <button onclick="downloadMealImage()">다운로드</button>
-  </div>
+<img alt="식단 이미지" id="meal-image" src="meal.jpg" style="max-width:90%; height:auto; border:1px solid #ccc;"/>
+<div style="margin-top:10px;">
+<button onclick="downloadMealImage()">다운로드</button>
 </div>
-
+</div>
 <script>
 function showMealPage() {
   document.getElementById('login-section').style.display = 'none';
@@ -666,8 +665,6 @@ function downloadMealImage() {
   link.click();
 }
 </script>
-
-
 <script>
 // 🟢 새로 추가된 Firebase 이미지 로드 함수
 function loadMealImagesFromFirebase() {
@@ -744,6 +741,169 @@ function showMealPage() {
   loadMealImagesFromFirebase();
 }
 </script>
+<div id="audio-process-section" style="display:none;">
+<h1 style="text-align:center; color:#2c3e50; margin-bottom:2rem;">🎧 오디오맨 업무 프로세스</h1>
+<div class="process-section">
+<h2>1. 출근</h2>
+<ul>
+<li>인제스트룸에서 전날 맡긴 카드/하드 수령</li>
+<li>금일 출근할 선배님들 장비 점검 (와이어리스 CH1, 2 수음 체크 / 배터리 상태 확인 / 3일 지난 메모리 카드 포맷)</li>
+</ul>
+</div>
+<div class="process-section">
+<h2>2. 일정 준비</h2>
+<ul>
+<li>영상기자/PD/VJ 선배님께 우선 연락</li>
+<li>의뢰서 확인 및 본인에게 SMS 보내기 (메모용)</li>
+<li>출발 15~20분 전 배차 요청</li>
+<li>선배님 지시 사항에 따라 장비 챙기기 (게다스, 고프로, 오즈모, 우산 등)</li>
+</ul>
+</div>
+<div class="process-section">
+<h2>3. 일정 이동</h2>
+<ul>
+<li>차량 트렁크에 트라이 및 짐가방 적재 (6mm, ENG 카메라는 선배님이 뒷자리)</li>
+<li>형님 번호 확인 (취재 종료 후 소통용)</li>
+<li>목적지 주소 정확히 전달</li>
+</ul>
+</div>
+<div class="process-section">
+<h2>4. 일정 장소 도착 및 시작</h2>
+<ul>
+<li>트라이 세팅 (상황에 따라 위부터 세팅 가능)</li>
+<li>화이트밸런스 체크</li>
+<li>싱크/인터뷰 대비 와이어리스 주머니에 넣어두기</li>
+<li>레코딩 화면 보며 인덱스 정리</li>
+<li>긴급 이동 시 장비 파손 주의하며 동행</li>
+<li>인터뷰 시 이름 반드시 확인 (모자이크/익명 여부 체크)</li>
+<li>특이사항은 인덱스에 꼭 기입</li>
+</ul>
+</div>
+<div class="process-section">
+<h2>5. 일정 복귀 및 인제스트</h2>
+<ul>
+<li>차량운행 일지 작성 (형님 제공)</li>
+<li>짐이 많을 경우 도움 요청 (카톡)</li>
+<li>기재실 도착 후 인제스트 → 장비 정리</li>
+<li>인덱스 확인 → MIDAS에 기입 및 저장</li>
+<li>바코드 2장 출력 후 각각 케이스와 파일철에 부착</li>
+<li>모든 장비 정리 후 휴식</li>
+</ul>
+</div>
+</div>
+<script>
+function showAudioProcess() {
+  document.getElementById('login-section').style.display = 'none';
+  document.getElementById('form-section').style.display = 'none';
+  document.getElementById('meal-section').style.display = 'none';
+  document.getElementById('audio-process-section').style.display = 'block';
+}
+</script>
+<style>
 
+    body {
+  text-align: left;
+      font-family: 'Pretendard', sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 2rem;
+      color: #333;
+    }
+
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 2rem;
+    }
+
+    .process-section {
+      background-color: #ffffff;
+      border-left: 5px solid #3498db;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .process-section h2 {
+      color: #2980b9;
+      margin-top: 0;
+    }
+
+    ul {
+      padding-left: 1.5rem;
+    }
+
+    li {
+      margin-bottom: 0.6rem;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 600px) {
+      body {
+  text-align: left;
+        padding: 1rem;
+      }
+    }
+  
+</style>
+<div id="audio-process-section" style="display:none;">
+<h1 style="text-align:center; color:#2c3e50; margin-bottom:2rem;">🎧 오디오맨 업무 프로세스</h1>
+<div class="process-section">
+<h2>1. 출근</h2>
+<ul>
+<li>인제스트룸에서 전날 맡긴 카드/하드 수령</li>
+<li>금일 출근할 선배님들 장비 점검 (와이어리스 CH1, 2 수음 체크 / 배터리 상태 확인 / 3일 지난 메모리 카드 포맷)</li>
+</ul>
+</div>
+<div class="process-section">
+<h2>2. 일정 준비</h2>
+<ul>
+<li>영상기자/PD/VJ 선배님께 우선 연락</li>
+<li>의뢰서 확인 및 본인에게 SMS 보내기 (메모용)</li>
+<li>출발 15~20분 전 배차 요청</li>
+<li>선배님 지시 사항에 따라 장비 챙기기 (게다스, 고프로, 오즈모, 우산 등)</li>
+</ul>
+</div>
+<div class="process-section">
+<h2>3. 일정 이동</h2>
+<ul>
+<li>차량 트렁크에 트라이 및 짐가방 적재 (6mm, ENG 카메라는 선배님이 뒷자리)</li>
+<li>형님 번호 확인 (취재 종료 후 소통용)</li>
+<li>목적지 주소 정확히 전달</li>
+</ul>
+</div>
+<div class="process-section">
+<h2>4. 일정 장소 도착 및 시작</h2>
+<ul>
+<li>트라이 세팅 (상황에 따라 위부터 세팅 가능)</li>
+<li>화이트밸런스 체크</li>
+<li>싱크/인터뷰 대비 와이어리스 주머니에 넣어두기</li>
+<li>레코딩 화면 보며 인덱스 정리</li>
+<li>긴급 이동 시 장비 파손 주의하며 동행</li>
+<li>인터뷰 시 이름 반드시 확인 (모자이크/익명 여부 체크)</li>
+<li>특이사항은 인덱스에 꼭 기입</li>
+</ul>
+</div>
+<div class="process-section">
+<h2>5. 일정 복귀 및 인제스트</h2>
+<ul>
+<li>차량운행 일지 작성 (형님 제공)</li>
+<li>짐이 많을 경우 도움 요청 (카톡)</li>
+<li>기재실 도착 후 인제스트 → 장비 정리</li>
+<li>인덱스 확인 → MIDAS에 기입 및 저장</li>
+<li>바코드 2장 출력 후 각각 케이스와 파일철에 부착</li>
+<li>모든 장비 정리 후 휴식</li>
+</ul>
+</div>
+</div>
+<script>
+function showAudioProcess() {
+  document.getElementById('login-section').style.display = 'none';
+  document.getElementById('form-section').style.display = 'none';
+  document.getElementById('meal-section').style.display = 'none';
+  document.getElementById('audio-process-section').style.display = 'block';
+}
+</script>
 </body>
 </html>
