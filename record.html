@@ -183,10 +183,10 @@ function safeHTML(str) {
             const row = tbody.insertRow();
             row.innerHTML = `
               <td>${i + 1}</td>
-              <td><img src="https://img.youtube.com/vi/${item.videoId}/0.jpg" alt="썸네일" class="thumbnail" onclick="window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}');"/></td>
+              <td><img src="https://img.youtube.com/vi/${item.videoId}/0.jpg" alt="썸네일" class="thumbnail" onclick="if (this.hasAttribute('readonly')) { window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}'); }"/></td>
               <td><input type="text" class="title" value="${item.title}" readonly/></td>
               <td style="text-align:center;"><input type="date" class="date" value="${item.date}" disabled/></td>
-              <td><input type="text" class="url" value="${item.url}" readonly onclick="window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}');"/></td>
+              <td><input type="text" class="url" value="${item.url}" readonly onclick="if (this.hasAttribute('readonly')) { window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}'); }"/></td>
               <td style='width: 100px;'><input type="text" class="memo" value="${item.memo}" readonly onclick="if (this.hasAttribute('readonly')) { navigator.clipboard.writeText(this.value); alert('메모 복사됨'); }"/></td>
               <td><button onclick="deleteRow(this)">🗑️</button></td>
             `;
@@ -354,10 +354,10 @@ function safeHTML(str) {
         const row = tbody.insertRow();
         row.innerHTML = `
           <td>${i + 1}</td>
-          <td><img src="https://img.youtube.com/vi/${item.videoId}/0.jpg" alt="썸네일" class="thumbnail" onclick="window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}');"/></td>
+          <td><img src="https://img.youtube.com/vi/${item.videoId}/0.jpg" alt="썸네일" class="thumbnail" onclick="if (this.hasAttribute('readonly')) { window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}'); }"/></td>
           <td><input type="text" class="title" value="${item.title}" readonly/></td>
           <td style="text-align:center;"><input type="date" class="date" value="${item.date}" disabled/></td>
-          <td><input type="text" class="url" value="${item.url}" readonly onclick="window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}');"/></td>
+          <td><input type="text" class="url" value="${item.url}" readonly onclick="if (this.hasAttribute('readonly')) { window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}'); }"/></td>
           <td style='width: 100px;'><input type="text" class="memo" value="${item.memo}" readonly onclick="if (this.hasAttribute('readonly')) { navigator.clipboard.writeText(this.value); alert('메모 복사됨'); }"/></td>
           <td><button onclick="deleteRow(this)">🗑️</button></td>
         `;
@@ -400,10 +400,10 @@ function renderPage(data) {
     const row = tbody.insertRow();
     row.innerHTML = `
       <td>${start + i + 1}</td>
-      <td><img src="https://img.youtube.com/vi/${item.videoId}/0.jpg" alt="썸네일" class="thumbnail" onclick="window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}');"/></td>
+      <td><img src="https://img.youtube.com/vi/${item.videoId}/0.jpg" alt="썸네일" class="thumbnail" onclick="if (this.hasAttribute('readonly')) { window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}'); }"/></td>
       <td><input type="text" class="title" value="${item.title}" readonly/></td>
       <td style="text-align:center;"><input type="date" class="date" value="${item.date}" disabled/></td>
-      <td><input type="text" class="url" value="${item.url}" readonly onclick="window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}');"/></td>
+      <td><input type="text" class="url" value="${item.url}" readonly onclick="if (this.hasAttribute('readonly')) { window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}'); }"/></td>
       <td style='width: 100px;'><input type="text" class="memo" value="${item.memo}" readonly onclick="if (this.hasAttribute('readonly')) { navigator.clipboard.writeText(this.value); alert('메모 복사됨'); }"/></td>
       <td><button onclick="deleteRow(this)">🗑️</button></td>
     `;
