@@ -1,0 +1,408 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>유튜브 기록</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f7f7f7;
+      margin: 0;
+      padding: 1rem;
+      color: #333;
+    }
+
+    h2 {
+      text-align: center;
+      color: #003366;
+    }
+
+    table {
+      border: 1px solid #ccc;
+      border-collapse: collapse;
+    
+      width: 100%;
+      max-width: 1000px;
+      margin: 0 auto;
+      border-collapse: collapse;
+      background: white;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 6px;
+      text-align: center;
+      font-size: 0.9rem;
+    
+      border: 1px solid #ccc;
+      padding: 6px;
+      text-align: center;
+      font-size: 0.9rem;
+    
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    input[type="text"], input[type="date"] {
+      width: 95%;
+      padding: 4px;
+      font-size: 0.85rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+    
+      width: 95%;
+      padding: 5px;
+      font-size: 0.9rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      margin: 5px;
+      padding: 6px 10px;
+      background-color: #003366;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 0.85rem;
+    
+      margin: 5px;
+      padding: 8px 12px;
+      background-color: #003366;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 0.9rem;
+    }
+
+    button:hover {
+      background-color: #002244;
+    }
+
+    img.thumbnail {
+      width: 400px;
+      height: auto;
+      cursor: pointer;
+    
+      width: 120px;
+      height: auto;
+      cursor: pointer;
+    }
+
+    .center-buttons {
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    @media (max-width: 768px) {
+      th, td {
+      border: 1px solid #ccc;
+      padding: 6px;
+      text-align: center;
+      font-size: 0.9rem;
+    
+      border: 1px solid #ccc;
+      padding: 6px;
+      text-align: center;
+      font-size: 0.9rem;
+    
+        font-size: 0.8rem;
+        padding: 5px;
+      }
+
+      img.thumbnail {
+      width: 400px;
+      height: auto;
+      cursor: pointer;
+    
+        width: 80px;
+      }
+    }
+  
+    th {
+      background-color: #003366;
+      color: white;
+    }
+</style>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyACkd1QzPgDnmRz3b206e4IiePiS55keio",
+      authDomain: "mbc-ingest.firebaseapp.com",
+      databaseURL: "https://mbc-ingest-default-rtdb.firebaseio.com",
+      projectId: "mbc-ingest",
+      storageBucket: "mbc-ingest.appspot.com",
+      messagingSenderId: "700019516",
+      appId: "1:700019516:web:09f8b929973059316ea439"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    const currentUser = new URLSearchParams(window.location.search).get('user') || 'unknown';
+
+    function saveToFirebase(data) {
+      db.ref('youtube_records/' + currentUser).set(data).then(() => {
+        console.log("데이터 저장 완료");
+      }).catch(err => {
+        alert("저장 실패: " + err.message);
+      });
+    }
+
+    function loadFromFirebase() {
+      db.ref('youtube_records/' + currentUser).once('value').then(snapshot => {
+        const data = snapshot.val();
+        if (data) {
+          tbody.innerHTML = "";
+          data.forEach((item, i) => {
+            const row = tbody.insertRow();
+            row.innerHTML = `
+              <td>${i + 1}</td>
+              <td><img src="https://img.youtube.com/vi/${item.videoId}/0.jpg" alt="썸네일" class="thumbnail" onclick="window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}');"/></td>
+              <td><input type="text" class="title" value="${item.title}" readonly/></td>
+              <td style="text-align:center;"><input type="date" class="date" value="${item.date}" disabled/></td>
+              <td><input type="text" class="url" value="${item.url}" readonly onclick="window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}');"/></td>
+              <td style='width: 100px;'><input type="text" class="memo" value="${item.memo}" readonly onclick="if (this.hasAttribute('readonly')) { navigator.clipboard.writeText(this.value); alert('메모 복사됨'); }"/></td>
+              <td><button onclick="deleteRow(this)">🗑️</button></td>
+            `;
+          });
+        }
+      });
+    }
+
+    
+window.addEventListener('load', loadFromFirebase);
+
+function loadFromFirebase() {
+  db.ref('youtube_records/' + currentUser).once('value').then(snapshot => {
+    const data = snapshot.val();
+    if (data) {
+      savedData = data.sort((a, b) => new Date(b.date) - new Date(a.date));
+      renderPage(savedData);
+    }
+  });
+}
+
+  </script>
+
+</head>
+<body>
+
+<div style="text-align:center; margin: 10px 0;">
+  <img src="title_logo.png" alt="MBC 인제스트 Note" style="cursor:pointer; max-width: 400px; width: 60%; height: auto;" onclick="window.location.href='index.html'"/>
+</div>
+
+  
+<div style="text-align:center; margin: 1rem 0;">
+  <input id="search-input" type="text" placeholder="제목 검색" style="padding: 8px; width: 80%; max-width: 600px; font-size: 0.9rem;">
+  <button onclick="searchRecords()">검색</button>
+</div>
+
+  <table id="recordTable">
+    <thead>
+      <tr>
+        <th>No.</th>
+        <th>썸네일</th>
+        <th>제목</th>
+        <th>날짜</th>
+        <th>주소</th>
+        <th>메모</th>
+        <th>삭제</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <div class="center-buttons">
+    <button onclick="addRow()">추가</button>
+    <button onclick="editRows()">편집</button>
+    <button onclick="saveRows()">저장</button>
+  </div>
+
+  <script>
+    const tbody = document.querySelector("#recordTable tbody");
+    let savedData = [];
+
+    function getToday() {
+      const d = new Date();
+      return d.toISOString().split("T")[0];
+    }
+
+    function extractVideoId(url) {
+      try {
+        const urlObj = new URL(url);
+        if (urlObj.hostname === "youtu.be") return urlObj.pathname.slice(1);
+        if (urlObj.hostname.includes("youtube.com")) return urlObj.searchParams.get("v");
+        return null;
+      } catch {
+        return null;
+      }
+    }
+
+    async function fetchYouTubeTitle(videoId) {
+      try {
+        const response = await fetch(`https://noembed.com/embed?url=https://www.youtube.com/watch?v=${videoId}`);
+        const data = await response.json();
+        return data.title || "제목 없음";
+      } catch {
+        return "제목 오류";
+      }
+    }
+
+    function addRow() {
+      const row = tbody.insertRow();
+      const idx = tbody.rows.length;
+
+      row.innerHTML = `
+        <td>${idx}</td>
+        <td><img src="" alt="썸네일" class="thumbnail"/></td>
+        <td><input type="text" class="title"/></td>
+        <td><input type="date" class="date" value="${getToday()}"/></td>
+        <td><input type="text" class="url" oninput="updateFromURL(this)"/></td>
+        <td style='width: 100px;'><input type="text" class="memo"/></td>
+        <td><button onclick="deleteRow(this)">🗑️</button></td>
+      `;
+    }
+
+    function updateFromURL(input) {
+      const row = input.closest("tr");
+      const videoId = extractVideoId(input.value);
+      if (!videoId) return;
+
+      const thumbnail = row.querySelector("img.thumbnail");
+      const titleInput = row.querySelector(".title");
+
+      thumbnail.src = `https://img.youtube.com/vi/${videoId}/0.jpg`;
+      thumbnail.onclick = () => {
+        navigator.clipboard.writeText(input.value);
+        window.open(input.value, '_blank');
+      };
+
+      fetchYouTubeTitle(videoId).then(title => {
+        titleInput.value = title;
+      });
+
+      const dateInput = row.querySelector(".date");
+      dateInput.value = getToday();
+    }
+
+    function deleteRow(btn) {
+      if (!confirm("정말 삭제하시겠습니까?")) return;
+
+      const row = btn.closest("tr");
+      row.remove();
+      updateRowIndices();
+    }
+
+    function updateRowIndices() {
+      [...tbody.rows].forEach((row, i) => row.cells[0].textContent = i + 1);
+    }
+
+    function saveRows() {
+      let data = [...tbody.rows].map(row => {
+        const videoId = extractVideoId(row.querySelector(".url").value);
+        const url = row.querySelector(".url").value;
+        const title = row.querySelector(".title").value;
+        const date = row.querySelector(".date").value;
+        const memo = row.querySelector(".memo").value;
+        return { videoId, url, title, date, memo };
+      });
+
+      data.sort((a, b) => new Date(b.date) - new Date(a.date));
+      tbody.innerHTML = "";
+
+      data.forEach((item, i) => {
+        const row = tbody.insertRow();
+        row.innerHTML = `
+          <td>${i + 1}</td>
+          <td><img src="https://img.youtube.com/vi/${item.videoId}/0.jpg" alt="썸네일" class="thumbnail" onclick="window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}');"/></td>
+          <td><input type="text" class="title" value="${item.title}" readonly/></td>
+          <td style="text-align:center;"><input type="date" class="date" value="${item.date}" disabled/></td>
+          <td><input type="text" class="url" value="${item.url}" readonly onclick="window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}');"/></td>
+          <td style='width: 100px;'><input type="text" class="memo" value="${item.memo}" readonly onclick="if (this.hasAttribute('readonly')) { navigator.clipboard.writeText(this.value); alert('메모 복사됨'); }"/></td>
+          <td><button onclick="deleteRow(this)">🗑️</button></td>
+        `;
+      });
+
+      savedData = data;
+      renderPage(savedData);
+      saveToFirebase(data);
+      alert("저장되었습니다!");
+    }
+
+    function editRows() {
+      [...tbody.rows].forEach(row => {
+        row.querySelectorAll("input").forEach(input => input.removeAttribute("readonly"));
+        row.querySelectorAll("input[type='date']").forEach(input => input.removeAttribute("disabled"));
+      });
+    }
+  </script>
+
+<script>
+let currentPage = 1;
+const rowsPerPage = 20;
+
+function renderPage(data) {
+  tbody.innerHTML = "";
+  const start = (currentPage - 1) * rowsPerPage;
+  const end = start + rowsPerPage;
+  const pageData = data.slice(start, end);
+
+  pageData.forEach((item, i) => {
+    const row = tbody.insertRow();
+    row.innerHTML = `
+      <td>${start + i + 1}</td>
+      <td><img src="https://img.youtube.com/vi/${item.videoId}/0.jpg" alt="썸네일" class="thumbnail" onclick="window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}');"/></td>
+      <td><input type="text" class="title" value="${item.title}" readonly/></td>
+      <td style="text-align:center;"><input type="date" class="date" value="${item.date}" disabled/></td>
+      <td><input type="text" class="url" value="${item.url}" readonly onclick="window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}');"/></td>
+      <td style='width: 100px;'><input type="text" class="memo" value="${item.memo}" readonly onclick="if (this.hasAttribute('readonly')) { navigator.clipboard.writeText(this.value); alert('메모 복사됨'); }"/></td>
+      <td><button onclick="deleteRow(this)">🗑️</button></td>
+    `;
+  });
+
+  renderPagination(data.length);
+}
+
+function renderPagination(totalRows) {
+  const totalPages = Math.ceil(totalRows / rowsPerPage);
+  let nav = document.getElementById("pagination-nav");
+  if (!nav) {
+    nav = document.createElement("div");
+    nav.id = "pagination-nav";
+    nav.style.textAlign = "center";
+    nav.style.marginTop = "1rem";
+    document.body.appendChild(nav);
+  }
+  nav.innerHTML = "";
+  for (let i = 1; i <= totalPages; i++) {
+    const btn = document.createElement("button");
+    btn.textContent = i;
+    btn.style.margin = "0 5px";
+    btn.onclick = () => {
+      currentPage = i;
+      renderPage(savedData);
+    };
+    nav.appendChild(btn);
+  }
+}
+</script>
+
+
+<script>
+function searchRecords() {
+  const keyword = document.getElementById('search-input').value.trim().toLowerCase();
+  const filtered = savedData.filter(item => item.title.toLowerCase().includes(keyword));
+  currentPage = 1;
+  renderPage(filtered);
+}
+</script>
+
+</body>
+</html>
