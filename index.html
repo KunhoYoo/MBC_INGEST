@@ -762,7 +762,7 @@ function showAudioProcess() {
   function goToRecordPage() {
     const code = document.getElementById('login-code').value;
     if (allowedCodes.includes(code)) {
-      window.location.href = 'record.html';
+      window.location.href = 'record.html?user=' + encodeURIComponent(code);
     } else {
       alert("로그인 코드가 올바르지 않습니다.");
     }
