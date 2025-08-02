@@ -129,6 +129,231 @@
       background-color: #003366;
       color: white;
     }
+
+
+@media (max-width: 600px) {
+  tr {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    padding: 0.5rem 0.7rem;
+  }
+
+  .card-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+  }
+
+  .card-thumbnail {
+    flex: 0 0 100px;
+  }
+
+  .card-header-info {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    gap: 0.3rem;
+  }
+
+  .card-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .card-row label {
+    font-weight: bold;
+    font-size: 0.8rem;
+    flex: 0 0 50px;
+  }
+
+  .card-row input {
+    flex-grow: 1;
+    font-size: 0.8rem;
+    padding: 4px;
+  }
+
+  .card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 4px;
+  }
+
+  .thumbnail {
+    width: 100px;
+    height: auto;
+    border-radius: 4px;
+  }
+
+  button {
+    padding: 4px 8px;
+    font-size: 0.8rem;
+  }
+}
+
+
+  thead {
+    display: none;
+  }
+
+  tr {
+    margin-bottom: 1.5rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 0.5rem;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+
+  td {
+    text-align: left !important;
+    padding: 4px 10px;
+    font-size: 0.85rem;
+    border: none;
+    position: relative;
+  }
+
+  td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    display: block;
+    margin-bottom: 2px;
+    color: #003366;
+  }
+
+  .thumbnail {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 0.5rem;
+  }
+
+  input[type="text"], input[type="date"] {
+    font-size: 0.9rem;
+    width: 100%;
+  }
+
+  .btn-row, #pagination-nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+}
+
+
+
+@media (max-width: 600px) {
+  tr {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    padding: 0.5rem 0.7rem;
+  }
+
+  .card-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+  }
+
+  .card-thumbnail {
+    flex: 0 0 100px;
+  }
+
+  .card-header-info {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    gap: 0.3rem;
+  }
+
+  .card-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .card-row label {
+    font-weight: bold;
+    font-size: 0.8rem;
+    flex: 0 0 50px;
+  }
+
+  .card-row input {
+    flex-grow: 1;
+    font-size: 0.8rem;
+    padding: 4px;
+  }
+
+  .card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 4px;
+  }
+
+  .thumbnail {
+    width: 100px;
+    height: auto;
+    border-radius: 4px;
+  }
+
+  button {
+    padding: 4px 8px;
+    font-size: 0.8rem;
+  }
+}
+
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+  }
+
+  .card-thumbnail {
+    flex: 0 0 120px;
+  }
+
+  .card-header-info {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+
+  .card-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .card-row label {
+    font-weight: bold;
+    flex: 0 0 60px;
+  }
+
+  .card-row input {
+    flex-grow: 1;
+    font-size: 0.9rem;
+  }
+
+  .card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .thumbnail {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+  }
+}
+
 </style>
 
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js">
@@ -183,12 +408,12 @@ function safeHTML(str) {
             const row = tbody.insertRow();
             row.innerHTML = `
               <td>${i + 1}</td>
-              <td><img src="https://img.youtube.com/vi/${item.videoId}/0.jpg" alt="썸네일" class="thumbnail" onclick="if (this.hasAttribute('readonly')) { window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}'); }"/></td>
-              <td><input type="text" class="title" value="${item.title}" readonly/></td>
-              <td style="text-align:center;"><input type="date" class="date" value="${item.date}" disabled/></td>
-              <td><input type="text" class="url" value="${item.url}" readonly onclick="if (this.hasAttribute('readonly')) { window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}'); }"/></td>
-              <td style='width: 100px;'><input type="text" class="memo" value="${item.memo}" readonly onclick="if (this.hasAttribute('readonly')) { navigator.clipboard.writeText(this.value); alert('메모 복사됨'); }"/></td>
-              <td><button onclick="deleteRow(this)">🗑️</button></td>
+              <td data-label="썸네일"><img src="https://img.youtube.com/vi/${item.videoId}/0.jpg" alt="썸네일" class="thumbnail" onclick="if (this.hasAttribute('readonly')) { window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}'); }"/></td>
+              <td data-label="제목"><input type="text" class="title" value="${item.title}" readonly/></td>
+              <td data-label="날짜" style="text-align:center;"><input type="date" class="date" value="${item.date}" disabled/></td>
+              <td data-label="주소"><input type="text" class="url" value="${item.url}" readonly onclick="if (this.hasAttribute('readonly')) { window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}'); }"/></td>
+              <td data-label="메모" style='width: 100px;'><input type="text" class="memo" value="${item.memo}" readonly onclick="if (this.hasAttribute('readonly')) { navigator.clipboard.writeText(this.value); alert('메모 복사됨'); }"/></td>
+              <td data-label="삭제"><button onclick="deleteRow(this)">🗑️</button></td>
             `;
           });
         }
@@ -289,11 +514,11 @@ function safeHTML(str) {
       row.innerHTML = `
         <td>${idx}</td>
         <td><img src="" alt="썸네일" class="thumbnail"/></td>
-        <td><input type="text" class="title"/></td>
+        <td data-label="제목"><input type="text" class="title"/></td>
         <td><input type="date" class="date" value="${getToday()}"/></td>
-        <td><input type="text" class="url" oninput="updateFromURL(this)"/></td>
-        <td style='width: 100px;'><input type="text" class="memo"/></td>
-        <td><button onclick="deleteRow(this)">🗑️</button></td>
+        <td data-label="주소"><input type="text" class="url" oninput="updateFromURL(this)"/></td>
+        <td data-label="메모" style='width: 100px;'><input type="text" class="memo"/></td>
+        <td data-label="삭제"><button onclick="deleteRow(this)">🗑️</button></td>
       `;
     }
 
@@ -354,12 +579,12 @@ function safeHTML(str) {
         const row = tbody.insertRow();
         row.innerHTML = `
           <td>${i + 1}</td>
-          <td><img src="https://img.youtube.com/vi/${item.videoId}/0.jpg" alt="썸네일" class="thumbnail" onclick="if (this.hasAttribute('readonly')) { window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}'); }"/></td>
-          <td><input type="text" class="title" value="${item.title}" readonly/></td>
-          <td style="text-align:center;"><input type="date" class="date" value="${item.date}" disabled/></td>
-          <td><input type="text" class="url" value="${item.url}" readonly onclick="if (this.hasAttribute('readonly')) { window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}'); }"/></td>
-          <td style='width: 100px;'><input type="text" class="memo" value="${item.memo}" readonly onclick="if (this.hasAttribute('readonly')) { navigator.clipboard.writeText(this.value); alert('메모 복사됨'); }"/></td>
-          <td><button onclick="deleteRow(this)">🗑️</button></td>
+          <td data-label="썸네일"><img src="https://img.youtube.com/vi/${item.videoId}/0.jpg" alt="썸네일" class="thumbnail" onclick="if (this.hasAttribute('readonly')) { window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}'); }"/></td>
+          <td data-label="제목"><input type="text" class="title" value="${item.title}" readonly/></td>
+          <td data-label="날짜" style="text-align:center;"><input type="date" class="date" value="${item.date}" disabled/></td>
+          <td data-label="주소"><input type="text" class="url" value="${item.url}" readonly onclick="if (this.hasAttribute('readonly')) { window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}'); }"/></td>
+          <td data-label="메모" style='width: 100px;'><input type="text" class="memo" value="${item.memo}" readonly onclick="if (this.hasAttribute('readonly')) { navigator.clipboard.writeText(this.value); alert('메모 복사됨'); }"/></td>
+          <td data-label="삭제"><button onclick="deleteRow(this)">🗑️</button></td>
         `;
       });
 
@@ -399,13 +624,13 @@ function renderPage(data) {
   pageData.forEach((item, i) => {
     const row = tbody.insertRow();
     row.innerHTML = `
-      <td>${start + i + 1}</td>
-      <td><img src="https://img.youtube.com/vi/${item.videoId}/0.jpg" alt="썸네일" class="thumbnail" onclick="if (this.hasAttribute('readonly')) { window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}'); }"/></td>
-      <td><input type="text" class="title" value="${item.title}" readonly/></td>
-      <td style="text-align:center;"><input type="date" class="date" value="${item.date}" disabled/></td>
-      <td><input type="text" class="url" value="${item.url}" readonly onclick="if (this.hasAttribute('readonly')) { window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}'); }"/></td>
-      <td style='width: 100px;'><input type="text" class="memo" value="${item.memo}" readonly onclick="if (this.hasAttribute('readonly')) { navigator.clipboard.writeText(this.value); alert('메모 복사됨'); }"/></td>
-      <td><button onclick="deleteRow(this)">🗑️</button></td>
+      <td data-label="No.">${start + i + 1}</td>
+      <td data-label="썸네일"><img src="https://img.youtube.com/vi/${item.videoId}/0.jpg" alt="썸네일" class="thumbnail" onclick="if (this.hasAttribute('readonly')) { window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}'); }"/></td>
+      <td data-label="제목"><input type="text" class="title" value="${item.title}" readonly/></td>
+      <td data-label="날짜" style="text-align:center;"><input type="date" class="date" value="${item.date}" disabled/></td>
+      <td data-label="주소"><input type="text" class="url" value="${item.url}" readonly onclick="if (this.hasAttribute('readonly')) { window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}'); }"/></td>
+      <td data-label="메모" style='width: 100px;'><input type="text" class="memo" value="${item.memo}" readonly onclick="if (this.hasAttribute('readonly')) { navigator.clipboard.writeText(this.value); alert('메모 복사됨'); }"/></td>
+      <td data-label="삭제"><button onclick="deleteRow(this)">🗑️</button></td>
     `;
   });
 
