@@ -478,34 +478,60 @@ function safeHTML(str) {
 
 function applySwipeDelete() {
   document.querySelectorAll("#recordTable tbody tr").forEach(row => {
-    if (!row.classList.contains("swipe-row")) {
-      row.classList.add("swipe-row");
+    row.classList.remove("show-delete");
+    row.classList.add("swipe-row");
 
-      const delBtn = document.createElement("div");
-      delBtn.className = "swipe-delete";
-      delBtn.innerText = "삭제";
-      delBtn.onclick = () => {
-        if (confirm("정말 삭제하시겠습니까?")) {
-          row.remove();
-          if (typeof updateRowIndices === 'function') updateRowIndices();
-        }
-      };
-      row.appendChild(delBtn);
+    const oldBtn = row.querySelector(".swipe-delete");
+    if (oldBtn) oldBtn.remove();
 
-      let startX = 0;
-      row.addEventListener("touchstart", e => {
-        startX = e.touches[0].clientX;
-      });
+    const delBtn = document.createElement("div");
+    delBtn.className = "swipe-delete";
+    delBtn.innerText = "삭제";
+    delBtn.onclick = () => {
+      if (confirm("정말 삭제하시겠습니까?")) {
+        row.remove();
+        if (typeof updateRowIndices === 'function') updateRowIndices();
+      }
+    };
+    row.appendChild(delBtn);
 
-      row.addEventListener("touchend", e => {
-        const diffX = startX - e.changedTouches[0].clientX;
-        if (diffX > 40) {
-          row.classList.add("show-delete");
-        } else if (diffX < -40) {
-          row.classList.remove("show-delete");
-        }
-      });
-    }
+    let startX = 0;
+    row.addEventListener("touchstart", e => {
+      startX = e.touches[0].clientX;
+    });
+
+    row.addEventListener("touchend", e => {
+      const diffX = startX - e.changedTouches[0].clientX;
+      if (diffX > 40) {
+        row.classList.add("show-delete");
+      } else if (diffX < -40) {
+        row.classList.remove("show-delete");
+      }
+    });
+  });
+}
+
+
+document.addEventListener("click", function(e) {
+  const target = e.target;
+  if (target.classList.contains("title") && target.hasAttribute("readonly")) {
+    navigator.clipboard.writeText(target.value);
+    alert("제목 복사됨");
+  }
+});
+
+
+function bindTitleCopyEvent() {
+  document.querySelectorAll("input.title").forEach(input => {
+    input.addEventListener("click", function () {
+      if (this.hasAttribute("readonly")) {
+        navigator.clipboard.writeText(this.value);
+        alert("제목 복사 완료");
+      }
+    });
+  });
+}
+    });
   });
 }
 
@@ -555,16 +581,16 @@ function safeHTML(str) {
               
 <td data-label="썸네일">${
   item.url && item.url !== "" 
-    ? '<a href="' + item.url + '" target="_blank" onclick="navigator.clipboard.writeText(\'' + item.url + '\')">' +
+    ? '<a href="' + item.url + '" target="_blank" >' +
       '<img src="https://img.youtube.com/vi/' + item.videoId + '/0.jpg" alt="썸네일" class="thumbnail" />' +
       '</a>'
     : '<img src="https://img.youtube.com/vi/' + item.videoId + '/0.jpg" alt="썸네일" class="thumbnail" />'
 }</td>
 
-              <td data-label="제목"><input type="text" class="title" onclick="if (this.hasAttribute('readonly')) { navigator.clipboard.writeText(this.value); alert('제목 복사됨'); }" value="${item.title}" readonly/></td>
+              <td data-label="제목"><input type="text" class="title"  value="${item.title}" readonly/></td>
               <td data-label="날짜" style="text-align:center;"><input type="date" class="date" value="${item.date}" disabled/></td>
-              <td data-label="주소"><input type="text" class="url" placeholder="단축링크 주소 입력" value="${item.url}" readonly onclick="if (this.hasAttribute('readonly')) { window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}'); }"/></td>
-              <td><input type="text" class="memo" value="${item.memo}" readonly onclick="if (this.hasAttribute('readonly')) { navigator.clipboard.writeText(this.value); alert('메모 복사됨'); }"/></td>
+              <td data-label="주소"><input type="text" class="url" placeholder="단축링크 주소 입력" value="${item.url}" readonly /></td>
+              <td><input type="text" class="memo" value="${item.memo}" readonly /></td>
               <td data-label="삭제"><button onclick="deleteRow(this)">🗑️</button></td>
             `;
           });
@@ -711,42 +737,49 @@ function safeHTML(str) {
     }
 
     function saveRows() {
-      let data = [...tbody.rows].map(row => {
-        const escapeHTML = (str) => (str || "").replace(/&/g, "&amp;")
-                                              .replace(/</g, "&lt;")
-                                              .replace(/>/g, "&gt;")
-                                              .replace(/"/g, "&quot;")
-                                              .replace(/'/g, "&#039;");
+  let data = [...tbody.rows].map(row => {
+    const escapeHTML = (str) => (str || "").replace(/&/g, "&amp;")
+                                          .replace(/</g, "&lt;")
+                                          .replace(/>/g, "&gt;")
+                                          .replace(/"/g, "&quot;")
+                                          .replace(/'/g, "&#039;");
+    const videoId = extractVideoId(row.querySelector(".url").value);
+    const url = row.querySelector(".url").value;
+    const title = row.querySelector(".title").value;
+    const date = row.querySelector(".date").value;
+    const memo = row.querySelector(".memo").value;
+    return { videoId, url: escapeHTML(url), title: escapeHTML(title), date, memo: escapeHTML(memo) };
+  });
 
-        const videoId = extractVideoId(row.querySelector(".url").value);
-        const url = row.querySelector(".url").value;
-        const title = row.querySelector(".title").value;
-        const date = row.querySelector(".date").value;
-        const memo = row.querySelector(".memo").value;
-        return { videoId, url: escapeHTML(url), title: escapeHTML(title), date, memo: escapeHTML(memo) };
-      });
+  data.sort((a, b) => new Date(b.date) - new Date(a.date));
+  tbody.innerHTML = "";
 
-      data.sort((a, b) => new Date(b.date) - new Date(a.date));
-      tbody.innerHTML = "";
+  data.forEach((item, i) => {
+    const row = tbody.insertRow();
+    const url = item.url || "";
+    const videoId = item.videoId || "";
+    const thumbnailHTML = url
+      ? '<a href="' + url + '" target="_blank" >' +
+        '<img src="https://img.youtube.com/vi/' + videoId + '/0.jpg" alt="썸네일" class="thumbnail" />' +
+        '</a>'
+      : '<img src="https://img.youtube.com/vi/' + videoId + '/0.jpg" alt="썸네일" class="thumbnail" />';
 
-      data.forEach((item, i) => {
-        const row = tbody.insertRow();
-        row.innerHTML = `
-          <td>${i + 1}</td>
-          <td data-label="썸네일"><a href="${item.url}" target="_blank" onclick="navigator.clipboard.writeText('${item.url}')"><img src="https://img.youtube.com/vi/${item.videoId}/0.jpg" alt="썸네일" class="thumbnail" /></a></td>
-          <td data-label="제목"><input type="text" class="title" onclick="if (this.hasAttribute('readonly')) { navigator.clipboard.writeText(this.value); alert('제목 복사됨'); }" value="${item.title}" readonly/></td>
-          <td data-label="날짜" style="text-align:center;"><input type="date" class="date" value="${item.date}" disabled/></td>
-          <td data-label="주소"><input type="text" class="url" placeholder="단축링크 주소 입력" value="${item.url}" readonly onclick="if (this.hasAttribute('readonly')) { window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}'); }"/></td>
-          <td><input type="text" class="memo" value="${item.memo}" readonly onclick="if (this.hasAttribute('readonly')) { navigator.clipboard.writeText(this.value); alert('메모 복사됨'); }"/></td>
-          <td data-label="삭제"><button onclick="deleteRow(this)">🗑️</button></td>
-        `;
-      });
+    row.innerHTML = `
+      <td data-label="No.">${i + 1}</td>
+      <td data-label="썸네일">${thumbnailHTML}</td>
+      <td data-label="제목"><input type="text" class="title" value="${item.title}" readonly /></td>
+      <td data-label="날짜" style="text-align:center;"><input type="date" class="date" value="${item.date}" disabled/></td>
+      <td data-label="주소"><input type="text" class="url" value="${item.url}" readonly /></td>
+      <td><input type="text" class="memo" value="${item.memo}" readonly /></td>
+      <td data-label="삭제"><button onclick="deleteRow(this)">🗑️</button></td>
+    `;
+  });
 
-      savedData = data;
-      renderPage(savedData);
-      saveToFirebase(data);
-      alert("저장되었습니다.");
-    }
+  savedData = data;
+  renderPage(savedData);
+  saveToFirebase(data);
+  alert("저장 완료");
+}
 
     function editRows() {
       [...tbody.rows].forEach(row => {
@@ -780,7 +813,7 @@ function renderPage(data) {
     const isReadonly = true; // always true immediately after save
     const videoId = item.videoId || "";
     const thumbnailHTML = isReadonly && url
-      ? '<a href="' + url + '" target="_blank" onclick="navigator.clipboard.writeText(\'' + url + '\')">' +
+      ? '<a href="' + url + '" target="_blank" >' +
         '<img src="https://img.youtube.com/vi/' + videoId + '/0.jpg" alt="썸네일" class="thumbnail" />' +
         '</a>'
       : '<img src="https://img.youtube.com/vi/' + videoId + '/0.jpg" alt="썸네일" class="thumbnail" />';
@@ -788,16 +821,17 @@ function renderPage(data) {
     row.innerHTML = `
       <td data-label="No.">${start + i + 1}</td>
       <td data-label="썸네일">${thumbnailHTML}</td>
-      <td data-label="제목"><input type="text" class="title" value="${item.title}" readonly/></td>
+      <td data-label="제목"><input type="text" class="title" value="${item.title}" readonly /></td>
       <td data-label="날짜" style="text-align:center;"><input type="date" class="date" value="${item.date}" disabled/></td>
-      <td data-label="주소"><input type="text" class="url" value="${url}" readonly onclick="if (this.hasAttribute('readonly')) { window.open('${url}', '_blank'); navigator.clipboard.writeText('${url}'); }"/></td>
-      <td><input type="text" class="memo" value="${item.memo}" readonly onclick="if (this.hasAttribute('readonly')) { navigator.clipboard.writeText(this.value); alert('메모 복사됨'); }"/></td>
+      <td data-label="주소"><input type="text" class="url" value="${url}" readonly /></td>
+      <td><input type="text" class="memo" value="${item.memo}" readonly /></td>
       <td data-label="삭제"><button onclick="deleteRow(this)">🗑️</button></td>
     `;
   });
 
   renderPagination(data.length);
 applySwipeDelete();
+bindTitleCopyEvent();
 }
 
 function renderPagination(totalRows) {
@@ -913,6 +947,30 @@ document.addEventListener('DOMContentLoaded', () => {
         row.classList.remove("show-delete");
       }
     });
+  });
+});
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  document.querySelector("#recordTable").addEventListener("click", function(e) {
+    if (e.target && e.target.classList.contains("title")) {
+      const isReadOnly = e.target.getAttribute("readonly") !== null || e.target.readOnly === true;
+      if (isReadOnly) {
+        navigator.clipboard.writeText(e.target.value);
+        alert("제목 복사 완료");
+      }
+    }
   });
 });
 </script>
