@@ -160,9 +160,7 @@
     flex-grow: 1;
   }
 
-  td[data-label="삭제"] {
-    display: none !important;
-  }
+  
   tr {
     display: flex;
     flex-direction: column;
@@ -305,9 +303,7 @@
     flex-grow: 1;
   }
 
-  td[data-label="삭제"] {
-    display: none !important;
-  }
+  
   tr {
     display: flex;
     flex-direction: column;
@@ -465,6 +461,177 @@ img.thumbnail {
   }
 }
 
+
+@media (max-width: 600px) {
+  td[data-label="메모"] {
+    display: flex !important;
+    align-items: center;
+    gap: 6px;
+  }
+
+  td[data-label="메모"] input.memo {
+    width: calc(100% - 50px) !important;
+    flex-grow: 1;
+  }
+
+  
+
+  td[data-label="메모"] button.delete-btn {
+    padding: 4px 6px;
+    font-size: 0.8rem;
+    flex-shrink: 0;
+    background-color: #003366;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+}
+
+@media (min-width: 601px) {
+  td[data-label="삭제"] {
+    display: table-cell !important;
+  }
+  td[data-label="메모"] button.delete-btn {
+    display: none !important;
+  }
+}
+
+@media (min-width: 601px) {
+  td[data-label="삭제"] {
+    display: table-cell !important;
+    text-align: center;
+    vertical-align: middle;
+  }
+  td[data-label="메모"] {
+    display: table-cell !important;
+    vertical-align: middle;
+  }
+  td[data-label="메모"] input.memo {
+    width: 100% !important;
+  }
+  td[data-label="메모"] button.delete-btn {
+    display: none !important;
+  }
+}
+
+@media (min-width: 601px) {
+  td[data-label="삭제"] {
+    display: table-cell !important;
+    text-align: center;
+    vertical-align: middle;
+  }
+  td[data-label="메모"] {
+    display: table-cell !important;
+    vertical-align: middle;
+  }
+  td[data-label="메모"] button.delete-btn {
+    display: none !important;
+  }
+}
+
+@media (min-width: 601px) {
+  td.pc-delete {
+    display: table-cell !important;
+    vertical-align: middle;
+    text-align: center;
+  }
+}
+@media (max-width: 600px) {
+  td.pc-delete {
+    display: none !important;
+  }
+}
+
+@media (min-width: 601px) {
+  td.pc-delete {
+    display: table-cell !important;
+  }
+}
+@media (max-width: 600px) {
+  td.pc-delete {
+    display: none !important;
+  }
+}
+
+@media (min-width: 601px) {
+  td.pc-delete {
+    display: table-cell !important;
+    vertical-align: middle;
+    text-align: center;
+  }
+}
+@media (max-width: 600px) {
+  td.pc-delete {
+    display: none !important;
+    visibility: hidden;
+    width: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+}
+
+@media (max-width: 600px) {
+  #recordTable tbody tr {
+    margin-bottom: 0.3rem !important;
+    padding-bottom: 0.2rem !important;
+  }
+}
+
+@media (max-width: 600px) {
+  #recordTable tbody tr {
+    margin-bottom: 0rem !important;
+    padding-bottom: 0rem !important;
+    padding-top: 0.2rem !important;
+  }
+  td[data-label="메모"] {
+    margin-bottom: 0rem !important;
+    padding-bottom: 0rem !important;
+  }
+  td[data-label="메모"] button.delete-btn {
+    margin-bottom: 0 !important;
+    padding-bottom: 2px !important;
+  }
+}
+
+@media (max-width: 600px) {
+  #recordTable tbody tr {
+    margin: 0 !important;
+    padding: 0.1rem 0.2rem !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  td {
+    padding: 2px 4px !important;
+    margin: 0 !important;
+  }
+
+  td[data-label="메모"] {
+    padding: 2px !important;
+    margin: 0 !important;
+  }
+
+  td[data-label="메모"] input.memo {
+    margin: 0 !important;
+    padding: 2px 4px !important;
+  }
+
+  td[data-label="메모"] button.delete-btn {
+    margin: 0 !important;
+    padding: 2px 6px !important;
+  }
+
+  button {
+    margin: 0 !important;
+    padding: 2px 6px !important;
+    border-radius: 3px !important;
+  }
+
+  .thumbnail {
+    margin-bottom: 0.2rem !important;
+  }
+}
 </style>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js">
 function safeHTML(str) {
@@ -590,8 +757,12 @@ function safeHTML(str) {
               <td data-label="제목"><input type="text" class="title"  value="${item.title}" readonly/></td>
               <td data-label="날짜" style="text-align:center;"><input type="date" class="date" value="${item.date}" disabled/></td>
               <td data-label="주소"><input type="text" class="url" placeholder="단축링크 주소 입력" value="${item.url}" readonly /></td>
-              <td><input type="text" class="memo" value="${item.memo}" readonly /></td>
-              <td data-label="삭제"><button onclick="deleteRow(this)">🗑️</button></td>
+              
+<td data-label="메모" colspan="2" style="display:flex; align-items:center; gap:6px;">
+  <input type="text" class="memo" value="${item.memo}" readonly />
+  <button class="delete-btn" onclick="deleteRow(this)">🗑️</button>
+</td>
+<td data-label="삭제" class="pc-delete"><button onclick="deleteRow(this)">🗑️</button></td>
             `;
           });
         }
@@ -621,23 +792,66 @@ function safeHTML(str) {
 }
 
 </script>
-</head>
+<style>
+@media (max-width: 600px) {
+  td[data-label="메모"] {
+    display: flex !important;
+    align-items: center;
+    gap: 6px;
+  }
+
+  td[data-label="메모"] input.memo {
+    width: calc(100% - 50px) !important;
+    flex-grow: 1;
+  }
+
+  td[data-label="삭제"] {
+    display: inline-block !important;
+    margin-left: auto;
+  }
+
+  td[data-label="삭제"] button {
+    font-size: 0.8rem;
+    padding: 4px 6px;
+  }
+}
+</style><style>
+@media (max-width: 600px) {
+  tr { display: flex; flex-direction: column; gap: 0.2rem; padding: 0.3rem 0.5rem; margin-bottom: 0.3rem; }
+
+  td[data-label="메모"] {
+    display: flex !important;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+  }
+
+  td[data-label="메모"] input.memo {
+    width: calc(100% - 50px) !important;
+    flex-grow: 1;
+  }
+
+  td[data-label="삭제"] {
+    display: inline-block !important;
+    margin-left: auto;
+  }
+
+  td[data-label="삭제"] button {
+    font-size: 0.8rem;
+    padding: 4px 6px;
+  }
+}
+</style></head>
 <body>
 <div style="text-align:center; margin: 10px 0;">
 <img alt="MBC 인제스트 Note" onclick="window.location.href='index.html'" src="title_logo.png" style="cursor:pointer; max-width: 400px; width: 60%; height: auto;"/>
 </div>
-
-
 <div style="text-align:center; margin: 1rem 0;">
-  <div style="display: flex; justify-content: center; align-items: center; gap: 0.5rem; flex-wrap: nowrap;">
-    <input id="search-input" type="text" placeholder="제목 또는 메모 검색" 
-           style="padding: 8px; width: 60%; max-width: 280px; font-size: 0.9rem;">
-    <button onclick="searchRecords()">검색</button>
-  </div>
+<div style="display: flex; justify-content: center; align-items: center; gap: 0.5rem; flex-wrap: nowrap;">
+<input id="search-input" placeholder="제목 또는 메모 검색" style="padding: 8px; width: 60%; max-width: 280px; font-size: 0.9rem;" type="text"/>
+<button onclick="searchRecords()">검색</button>
 </div>
-
 </div>
-
 <table id="recordTable">
 <thead>
 <tr>
@@ -698,7 +912,7 @@ function safeHTML(str) {
         <td><input type="date" class="date" value="${getToday()}"/></td>
         <td data-label="주소"><input type="text" class="url" placeholder="단축링크 주소 입력" oninput="updateFromURL(this)"/></td>
         <td><input type="text" class="memo"/></td>
-        <td data-label="삭제"><button onclick="deleteRow(this)">🗑️</button></td>
+        
       `;
     }
 
@@ -770,8 +984,12 @@ function safeHTML(str) {
       <td data-label="제목"><input type="text" class="title" value="${item.title}" readonly /></td>
       <td data-label="날짜" style="text-align:center;"><input type="date" class="date" value="${item.date}" disabled/></td>
       <td data-label="주소"><input type="text" class="url" value="${item.url}" readonly /></td>
-      <td><input type="text" class="memo" value="${item.memo}" readonly /></td>
-      <td data-label="삭제"><button onclick="deleteRow(this)">🗑️</button></td>
+      
+<td data-label="메모" colspan="2" style="display:flex; align-items:center; gap:6px;">
+  <input type="text" class="memo" value="${item.memo}" readonly />
+  <button class="delete-btn" onclick="deleteRow(this)">🗑️</button>
+</td>
+<td data-label="삭제" class="pc-delete"><button onclick="deleteRow(this)">🗑️</button></td>
     `;
   });
 
@@ -824,8 +1042,12 @@ function renderPage(data) {
       <td data-label="제목"><input type="text" class="title" value="${item.title}" readonly /></td>
       <td data-label="날짜" style="text-align:center;"><input type="date" class="date" value="${item.date}" disabled/></td>
       <td data-label="주소"><input type="text" class="url" value="${url}" readonly /></td>
-      <td><input type="text" class="memo" value="${item.memo}" readonly /></td>
-      <td data-label="삭제"><button onclick="deleteRow(this)">🗑️</button></td>
+      
+<td data-label="메모" colspan="2" style="display:flex; align-items:center; gap:6px;">
+  <input type="text" class="memo" value="${item.memo}" readonly />
+  <button class="delete-btn" onclick="deleteRow(this)">🗑️</button>
+</td>
+<td data-label="삭제" class="pc-delete"><button onclick="deleteRow(this)">🗑️</button></td>
     `;
   });
 
@@ -950,17 +1172,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 </script>
-
-
-
-
-
-
-
-
-
-
-
 <script>
 document.addEventListener("DOMContentLoaded", function() {
   document.querySelector("#recordTable").addEventListener("click", function(e) {
@@ -974,6 +1185,5 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 });
 </script>
-
 </body>
 </html>
