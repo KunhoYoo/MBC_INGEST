@@ -502,6 +502,170 @@
     padding: 4px;
   }
 }
+
+@media (max-width: 768px) {
+  td[data-label="No."],
+  td[data-label="썸네일"]::before,
+  td[data-label="제목"]::before,
+  td[data-label="날짜"]::before,
+  td[data-label="주소"]::before,
+  td[data-label="메모"]::before {
+    display: none !important;
+  }
+
+  td[data-label="썸네일"] img.thumbnail {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  margin: 0 auto;
+  padding: 0;
+}
+}
+
+
+@media (max-width: 768px) {
+  td[data-label="삭제"]::before {
+    display: none !important;
+  }
+
+  td[data-label="썸네일"] img.thumbnail {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  margin: 0 auto;
+  padding: 0;
+}
+
+  input.memo {
+  width: 100% !important;
+  padding: 6px 10px;
+  font-size: 0.9rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+}
+
+
+input[readonly] {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+}
+
+
+@media (max-width: 768px) {
+  td[data-label="메모"][colspan="2"] {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between;
+    gap: 6px;
+    width: 100%;
+    flex-wrap: nowrap;
+  }
+
+  td[data-label="메모"] input.memo {
+  width: 100% !important;
+  padding: 6px 10px;
+  font-size: 0.9rem;
+  height: 100%;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+  td[data-label="메모"] button {
+  align-self: center;
+  margin-left: 6px;
+    flex-shrink: 0;
+  }
+}
+
+
+@media (max-width: 768px) {
+  td[data-label="메모"][colspan="2"] {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-start;
+    width: 100% !important;
+    gap: 8px;
+    flex-wrap: nowrap !important;
+  }
+
+  td[data-label="메모"] input.memo {
+  width: 100% !important;
+  padding: 6px 10px;
+  font-size: 0.9rem;
+  height: 100%;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+  td[data-label="메모"] button {
+  align-self: center;
+  margin-left: 6px;
+    flex-shrink: 0 !important;
+    width: auto;
+    height: 100%;
+  }
+}
+
+
+
+
+
+@media (max-width: 768px) {
+  td[data-label="메모"][colspan="2"] button {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  td[data-label="메모"] input.memo {
+  width: 100% !important;
+  padding: 6px 10px;
+  font-size: 0.9rem;
+  height: 100%;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+}
+
+
+
+}
+
+
+
+}
+
+
+@media (max-width: 768px) {
+  td[data-label="메모"] input.memo {
+    width: 100% !important;
+    font-size: 1rem;
+    padding: 6px 10px;
+    min-width: 0 !important;
+  }
+}
+
 </style>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js">
 function safeHTML(str) {
@@ -555,12 +719,12 @@ function safeHTML(str) {
             const row = tbody.insertRow();
             row.innerHTML = `
               <td>${i + 1}</td>
-              <td data-label="썸네일"><img src="https://img.youtube.com/vi/${item.videoId}/0.jpg" alt="썸네일" class="thumbnail" onclick="if (this.hasAttribute('readonly')) { window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}'); }"/></td>
-              <td data-label="제목"><input type="text" class="title" value="${item.title}" readonly/></td>
+              <td data-label="썸네일"><img src="https://img.youtube.com/vi/${item.videoId}/0.jpg" alt="썸네일" class="thumbnail" onclick="const input = this.closest('tr').querySelector('.url'); if (input.hasAttribute('readonly')) { window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}'); }"/></td>
+              <td data-label="제목"><input type="text" class="title" value="${item.title}" readonly onclick="if (this.hasAttribute('readonly')) { navigator.clipboard.writeText(this.value); alert('제목 복사 완료'); }"/></td>
               <td data-label="날짜" style="text-align:center;"><input type="date" class="date" value="${item.date}" disabled/></td>
-              <td data-label="주소"><input type="text" class="url" value="${item.url}" readonly onclick="if (this.hasAttribute('readonly')) { window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}'); }"/></td>
-              <td data-label="메모" style='width: 100px;'><input type="text" class="memo" value="${item.memo}" readonly onclick="if (this.hasAttribute('readonly')) { navigator.clipboard.writeText(this.value); alert('메모 복사됨'); }"/></td>
-              <td data-label="삭제"><button onclick="deleteRow(this)">🗑️</button></td>
+              <td data-label="주소"><input type="text" class="url" value="${item.url}" readonly onclick="const input = this.closest('tr').querySelector('.url'); if (input.hasAttribute('readonly')) { window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}'); }"/></td>
+              <td data-label="메모"><input type="text" class="memo" value="${item.memo}" readonly onclick="if (this.hasAttribute('readonly')) { navigator.clipboard.writeText(this.value); alert('메모 복사됨'); }"/></td>
+              <td data-label="삭제"><button onclick="deleteRow(this)" style="padding: 6px 10px; height: auto;">🗑️</button></td>
             `;
           });
         }
@@ -596,7 +760,7 @@ function safeHTML(str) {
 <img alt="MBC 인제스트 Note" onclick="window.location.href='index.html'" src="title_logo.png" style="cursor:pointer; max-width: 400px; width: 60%; height: auto;"/>
 </div>
 <div style="text-align:center; margin: 1rem 0;">
-<input id="search-input" placeholder="제목 검색" style="padding: 8px; width: 80%; max-width: 600px; font-size: 0.9rem;" type="text"/>
+<input id="search-input" placeholder="제목 / 메모 검색" style="padding: 8px; width: 80%; max-width: 600px; font-size: 0.9rem;" type="text"/>
 <button onclick="searchRecords()">검색</button>
 </div>
 <table id="recordTable">
@@ -658,8 +822,8 @@ function safeHTML(str) {
         <td data-label="제목"><input type="text" class="title"/></td>
         <td><input type="date" class="date" value="${getToday()}"/></td>
         <td data-label="주소"><input type="text" class="url" oninput="updateFromURL(this)"/></td>
-        <td data-label="메모" style='width: 100px;'><input type="text" class="memo"/></td>
-        <td data-label="삭제"><button onclick="deleteRow(this)">🗑️</button></td>
+        <td data-label="메모"><input type="text" class="memo"/></td>
+        <td data-label="삭제"><button onclick="deleteRow(this)" style="padding: 6px 10px; height: auto;">🗑️</button></td>
       `;
     }
 
@@ -698,42 +862,42 @@ function safeHTML(str) {
     }
 
     function saveRows() {
-      let data = [...tbody.rows].map(row => {
-        const escapeHTML = (str) => (str || "").replace(/&/g, "&amp;")
-                                              .replace(/</g, "&lt;")
-                                              .replace(/>/g, "&gt;")
-                                              .replace(/"/g, "&quot;")
-                                              .replace(/'/g, "&#039;");
+  let data = [...tbody.rows].map(row => {
+    const escapeHTML = (str) => (str || "").replace(/&/g, "&amp;")
+                                          .replace(/</g, "&lt;")
+                                          .replace(/>/g, "&gt;")
+                                          .replace(/"/g, "&quot;")
+                                          .replace(/'/g, "&#039;");
 
-        const videoId = extractVideoId(row.querySelector(".url").value);
-        const url = row.querySelector(".url").value;
-        const title = row.querySelector(".title").value;
-        const date = row.querySelector(".date").value;
-        const memo = row.querySelector(".memo").value;
-        return { videoId, url: escapeHTML(url), title: escapeHTML(title), date, memo: escapeHTML(memo) };
-      });
+    const videoId = extractVideoId(row.querySelector(".url").value);
+    const url = row.querySelector(".url").value;
+    const title = row.querySelector(".title").value;
+    const date = row.querySelector(".date").value;
+    const memo = row.querySelector(".memo").value;
+    return { videoId, url: escapeHTML(url), title: escapeHTML(title), date, memo: escapeHTML(memo) };
+  });
 
-      data.sort((a, b) => new Date(b.date) - new Date(a.date));
-      tbody.innerHTML = "";
+  data.sort((a, b) => new Date(b.date) - new Date(a.date));
+  tbody.innerHTML = "";
 
-      data.forEach((item, i) => {
-        const row = tbody.insertRow();
-        row.innerHTML = `
-          <td>${i + 1}</td>
-          <td data-label="썸네일"><img src="https://img.youtube.com/vi/${item.videoId}/0.jpg" alt="썸네일" class="thumbnail" onclick="if (this.hasAttribute('readonly')) { window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}'); }"/></td>
-          <td data-label="제목"><input type="text" class="title" value="${item.title}" readonly/></td>
-          <td data-label="날짜" style="text-align:center;"><input type="date" class="date" value="${item.date}" disabled/></td>
-          <td data-label="주소"><input type="text" class="url" value="${item.url}" readonly onclick="if (this.hasAttribute('readonly')) { window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}'); }"/></td>
-          <td data-label="메모" style='width: 100px;'><input type="text" class="memo" value="${item.memo}" readonly onclick="if (this.hasAttribute('readonly')) { navigator.clipboard.writeText(this.value); alert('메모 복사됨'); }"/></td>
-          <td data-label="삭제"><button onclick="deleteRow(this)">🗑️</button></td>
-        `;
-      });
+  data.forEach((item, i) => {
+    const row = tbody.insertRow();
+    row.innerHTML = `
+      <td>${i + 1}</td>
+      <td data-label="썸네일"><img src="https://img.youtube.com/vi/${item.videoId}/0.jpg" alt="썸네일" class="thumbnail" onclick="const input = this.closest('tr').querySelector('.url'); if (input.hasAttribute('readonly')) { window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}'); }"/></td>
+      <td data-label="제목"><input type="text" class="title" value="${item.title}" readonly onclick="if (this.hasAttribute('readonly')) { navigator.clipboard.writeText(this.value); alert('제목 복사 완료'); }"/></td>
+      <td data-label="날짜" style="text-align:center;"><input type="date" class="date" value="${item.date}" disabled/></td>
+      <td data-label="주소"><input type="text" class="url" value="${item.url}" readonly onclick="const input = this.closest('tr').querySelector('.url'); if (input.hasAttribute('readonly')) { window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}'); }"/></td>
+      <td data-label="메모"><input type="text" class="memo" value="${item.memo}" readonly onclick="if (this.hasAttribute('readonly')) { navigator.clipboard.writeText(this.value); alert('메모 복사됨'); }"/></td>
+      <td data-label="삭제"><button onclick="deleteRow(this)" style="padding: 6px 10px; height: auto;">🗑️</button></td>
+    `;
+  });
 
-      savedData = data;
-      renderPage(savedData);
-      saveToFirebase(data);
-      alert("저장되었습니다!");
-    }
+  savedData = data;
+  renderPage(savedData);
+  saveToFirebase(data);
+  alert("저장 완료");
+}
 
     function editRows() {
       [...tbody.rows].forEach(row => {
@@ -765,12 +929,12 @@ function renderPage(data) {
     const row = tbody.insertRow();
     row.innerHTML = `
       <td data-label="No.">${start + i + 1}</td>
-      <td data-label="썸네일"><img src="https://img.youtube.com/vi/${item.videoId}/0.jpg" alt="썸네일" class="thumbnail" onclick="if (this.hasAttribute('readonly')) { window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}'); }"/></td>
-      <td data-label="제목"><input type="text" class="title" value="${item.title}" readonly/></td>
+      <td data-label="썸네일"><img src="https://img.youtube.com/vi/${item.videoId}/0.jpg" alt="썸네일" class="thumbnail" onclick="const input = this.closest('tr').querySelector('.url'); if (input.hasAttribute('readonly')) { window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}'); }"/></td>
+      <td data-label="제목"><input type="text" class="title" value="${item.title}" readonly onclick="if (this.hasAttribute('readonly')) { navigator.clipboard.writeText(this.value); alert('제목 복사 완료'); }"/></td>
       <td data-label="날짜" style="text-align:center;"><input type="date" class="date" value="${item.date}" disabled/></td>
-      <td data-label="주소"><input type="text" class="url" value="${item.url}" readonly onclick="if (this.hasAttribute('readonly')) { window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}'); }"/></td>
-      <td data-label="메모" style='width: 100px;'><input type="text" class="memo" value="${item.memo}" readonly onclick="if (this.hasAttribute('readonly')) { navigator.clipboard.writeText(this.value); alert('메모 복사됨'); }"/></td>
-      <td data-label="삭제"><button onclick="deleteRow(this)">🗑️</button></td>
+      <td data-label="주소"><input type="text" class="url" value="${item.url}" readonly onclick="const input = this.closest('tr').querySelector('.url'); if (input.hasAttribute('readonly')) { window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}'); }"/></td>
+      <td data-label="메모"><input type="text" class="memo" value="${item.memo}" readonly onclick="if (this.hasAttribute('readonly')) { navigator.clipboard.writeText(this.value); alert('메모 복사됨'); }"/></td>
+      <td data-label="삭제"><button onclick="deleteRow(this)" style="padding: 6px 10px; height: auto;">🗑️</button></td>
     `;
   });
 
@@ -812,7 +976,7 @@ function safeHTML(str) {
 <script>
 function searchRecords() {
   const keyword = document.getElementById('search-input').value.trim().toLowerCase();
-  const filtered = savedData.filter(item => item.title.toLowerCase().includes(keyword));
+  const filtered = savedData.filter(item => item.title.toLowerCase().includes(keyword) || item.memo.toLowerCase().includes(keyword));
   currentPage = 1;
   renderPage(filtered);
 }
@@ -828,3 +992,16 @@ function safeHTML(str) {
 </script>
 </body>
 </html>
+
+<style>
+@media (max-width: 768px) {
+  td[data-label="삭제"] {
+    text-align: center;
+  }
+  td[data-label="삭제"] button {
+    width: 100% !important;
+    box-sizing: border-box;
+    margin-left: -0.5px;
+  }
+}
+</style>
