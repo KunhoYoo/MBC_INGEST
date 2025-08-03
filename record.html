@@ -49,10 +49,7 @@
       font-size: 0.9rem;
     }
 
-    input[type="text"], input[type="date"], input.memo {
-  width: 100% !important;
-  box-sizing: border-box;
-
+    input[type="text"], input[type="date"] {
       width: 95%;
       padding: 4px;
       font-size: 0.85rem;
@@ -136,31 +133,6 @@
 
 
 @media (max-width: 600px) {
-  img.thumbnail {
-    width: 100% !important;
-    max-width: 100% !important;
-    height: auto !important;
-    border-radius: 6px;
-    margin-bottom: 0.5rem;
-  }
-  td[data-label="No."] {
-    display: none !important;
-  }
-
-  td[data-label="메모"] {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  td[data-label="메모"] input.memo {
-    width: 100% !important;
-    box-sizing: border-box;
-
-    flex-grow: 1;
-  }
-
-  
   tr {
     display: flex;
     flex-direction: column;
@@ -245,7 +217,6 @@
   }
 
   td::before {
-  display: none !important;
     content: attr(data-label);
     font-weight: bold;
     display: block;
@@ -254,16 +225,13 @@
   }
 
   .thumbnail {
-    width: 100%; max-width: 100%; height: auto;
+    width: 100%;
     max-width: 100%;
     height: auto;
     margin-bottom: 0.5rem;
   }
 
-  input[type="text"], input[type="date"], input.memo {
-  width: 100% !important;
-  box-sizing: border-box;
-
+  input[type="text"], input[type="date"] {
     font-size: 0.9rem;
     width: 100%;
   }
@@ -279,31 +247,6 @@
 
 
 @media (max-width: 600px) {
-  img.thumbnail {
-    width: 100% !important;
-    max-width: 100% !important;
-    height: auto !important;
-    border-radius: 6px;
-    margin-bottom: 0.5rem;
-  }
-  td[data-label="No."] {
-    display: none !important;
-  }
-
-  td[data-label="메모"] {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  td[data-label="메모"] input.memo {
-    width: 100% !important;
-    box-sizing: border-box;
-
-    flex-grow: 1;
-  }
-
-  
   tr {
     display: flex;
     flex-direction: column;
@@ -405,7 +348,7 @@
   }
 
   .thumbnail {
-    width: 100%; max-width: 100%; height: auto;
+    width: 100%;
     max-width: 100%;
     height: auto;
     border-radius: 5px;
@@ -413,223 +356,150 @@
 }
 
 
-img.thumbnail {
-  max-height: 200px;
-  object-fit: cover;
-}
-
-
-img.thumbnail {
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  object-fit: cover;
-  border-radius: 6px;
-}
-
-
-@media (min-width: 769px) {
-  img.thumbnail {
-    max-width: 220px;
-    height: auto;
-    aspect-ratio: unset;
+@media (max-width: 768px) {
+  thead {
+    display: none;
+  }
+  .card-row {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+    border-radius: 8px;
+  }
+  .card-thumb {
+    width: 120px;
+    flex-shrink: 0;
+  }
+  .card-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 14px;
+  }
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+  }
+  .card-meta {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
   }
 }
 
 
-@media (max-width: 600px) {
-  .swipe-row {
-    position: relative;
-    transition: transform 0.3s ease;
-    overflow: hidden;
+@media (max-width: 768px) {
+  .card-row {
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+    padding: 4px;
+    margin-bottom: 6px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
   }
-
-  .swipe-delete {
-    position: absolute;
-    right: -70px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: #b22222;
-    color: white;
-    padding: 6px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: right 0.3s ease;
+  .card-thumb {
+    width: 100px;
+    flex-shrink: 0;
   }
-
-  .swipe-row.show-delete .swipe-delete {
-    right: 10px;
+  .card-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 13px;
   }
-}
-
-
-@media (max-width: 600px) {
-  td[data-label="메모"] {
-    display: flex !important;
+  .card-content input {
+    padding: 4px;
+    font-size: 13px;
+  }
+  .card-meta {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .card-header {
+    display: flex;
+    justify-content: space-between;
     align-items: center;
+    margin-bottom: 2px;
+  }
+  .card-content div {
+    margin-bottom: 2px;
+  }
+}
+
+
+@media (max-width: 768px) {
+  .card-row {
+    display: flex;
+    flex-direction: column;
+    padding: 6px;
+    margin-bottom: 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 13px;
+  }
+
+  .card-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 6px;
     gap: 6px;
   }
 
-  td[data-label="메모"] input.memo {
-    width: calc(100% - 50px) !important;
+  .card-no-thumb {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .card-no {
+    font-weight: bold;
+    font-size: 14px;
+  }
+
+  .card-thumb {
+    width: 90px;
+    height: auto;
+    border-radius: 4px;
+  }
+
+  .card-memo-delete {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     flex-grow: 1;
+    gap: 4px;
   }
 
-  
-
-  td[data-label="메모"] button.delete-btn {
-    padding: 4px 6px;
-    font-size: 0.8rem;
-    flex-shrink: 0;
-    background-color: #003366;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-}
-
-@media (min-width: 601px) {
-  td[data-label="삭제"] {
-    display: table-cell !important;
-  }
-  td[data-label="메모"] button.delete-btn {
-    display: none !important;
-  }
-}
-
-@media (min-width: 601px) {
-  td[data-label="삭제"] {
-    display: table-cell !important;
-    text-align: center;
-    vertical-align: middle;
-  }
-  td[data-label="메모"] {
-    display: table-cell !important;
-    vertical-align: middle;
-  }
-  td[data-label="메모"] input.memo {
-    width: 100% !important;
-  }
-  td[data-label="메모"] button.delete-btn {
-    display: none !important;
-  }
-}
-
-@media (min-width: 601px) {
-  td[data-label="삭제"] {
-    display: table-cell !important;
-    text-align: center;
-    vertical-align: middle;
-  }
-  td[data-label="메모"] {
-    display: table-cell !important;
-    vertical-align: middle;
-  }
-  td[data-label="메모"] button.delete-btn {
-    display: none !important;
-  }
-}
-
-@media (min-width: 601px) {
-  td.pc-delete {
-    display: table-cell !important;
-    vertical-align: middle;
-    text-align: center;
-  }
-}
-@media (max-width: 600px) {
-  td.pc-delete {
-    display: none !important;
-  }
-}
-
-@media (min-width: 601px) {
-  td.pc-delete {
-    display: table-cell !important;
-  }
-}
-@media (max-width: 600px) {
-  td.pc-delete {
-    display: none !important;
-  }
-}
-
-@media (min-width: 601px) {
-  td.pc-delete {
-    display: table-cell !important;
-    vertical-align: middle;
-    text-align: center;
-  }
-}
-@media (max-width: 600px) {
-  td.pc-delete {
-    display: none !important;
-    visibility: hidden;
-    width: 0 !important;
-    padding: 0 !important;
-    margin: 0 !important;
-  }
-}
-
-@media (max-width: 600px) {
-  #recordTable tbody tr {
-    margin-bottom: 0.3rem !important;
-    padding-bottom: 0.2rem !important;
-  }
-}
-
-@media (max-width: 600px) {
-  #recordTable tbody tr {
-    margin-bottom: 0rem !important;
-    padding-bottom: 0rem !important;
-    padding-top: 0.2rem !important;
-  }
-  td[data-label="메모"] {
-    margin-bottom: 0rem !important;
-    padding-bottom: 0rem !important;
-  }
-  td[data-label="메모"] button.delete-btn {
-    margin-bottom: 0 !important;
-    padding-bottom: 2px !important;
-  }
-}
-
-@media (max-width: 600px) {
-  #recordTable tbody tr {
-    margin: 0 !important;
-    padding: 0.1rem 0.2rem !important;
-    border: none !important;
-    box-shadow: none !important;
+  .card-memo-delete input {
+    padding: 4px;
+    font-size: 13px;
   }
 
-  td {
-    padding: 2px 4px !important;
-    margin: 0 !important;
+  .card-memo-delete button {
+    align-self: flex-end;
   }
 
-  td[data-label="메모"] {
-    padding: 2px !important;
-    margin: 0 !important;
+  .card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
   }
 
-  td[data-label="메모"] input.memo {
-    margin: 0 !important;
-    padding: 2px 4px !important;
-  }
-
-  td[data-label="메모"] button.delete-btn {
-    margin: 0 !important;
-    padding: 2px 6px !important;
-  }
-
-  button {
-    margin: 0 !important;
-    padding: 2px 6px !important;
-    border-radius: 3px !important;
-  }
-
-  .thumbnail {
-    margin-bottom: 0.2rem !important;
+  .card-content input {
+    font-size: 13px;
+    padding: 4px;
   }
 }
 </style>
@@ -640,66 +510,6 @@ function safeHTML(str) {
                    .replace(/>/g, "&gt;")
                    .replace(/"/g, "&quot;")
                    .replace(/'/g, "&#039;");
-}
-
-
-function applySwipeDelete() {
-  document.querySelectorAll("#recordTable tbody tr").forEach(row => {
-    row.classList.remove("show-delete");
-    row.classList.add("swipe-row");
-
-    const oldBtn = row.querySelector(".swipe-delete");
-    if (oldBtn) oldBtn.remove();
-
-    const delBtn = document.createElement("div");
-    delBtn.className = "swipe-delete";
-    delBtn.innerText = "삭제";
-    delBtn.onclick = () => {
-      if (confirm("정말 삭제하시겠습니까?")) {
-        row.remove();
-        if (typeof updateRowIndices === 'function') updateRowIndices();
-      }
-    };
-    row.appendChild(delBtn);
-
-    let startX = 0;
-    row.addEventListener("touchstart", e => {
-      startX = e.touches[0].clientX;
-    });
-
-    row.addEventListener("touchend", e => {
-      const diffX = startX - e.changedTouches[0].clientX;
-      if (diffX > 40) {
-        row.classList.add("show-delete");
-      } else if (diffX < -40) {
-        row.classList.remove("show-delete");
-      }
-    });
-  });
-}
-
-
-document.addEventListener("click", function(e) {
-  const target = e.target;
-  if (target.classList.contains("title") && target.hasAttribute("readonly")) {
-    navigator.clipboard.writeText(target.value);
-    alert("제목 복사됨");
-  }
-});
-
-
-function bindTitleCopyEvent() {
-  document.querySelectorAll("input.title").forEach(input => {
-    input.addEventListener("click", function () {
-      if (this.hasAttribute("readonly")) {
-        navigator.clipboard.writeText(this.value);
-        alert("제목 복사 완료");
-      }
-    });
-  });
-}
-    });
-  });
 }
 
 </script>
@@ -745,24 +555,12 @@ function safeHTML(str) {
             const row = tbody.insertRow();
             row.innerHTML = `
               <td>${i + 1}</td>
-              
-<td data-label="썸네일">${
-  item.url && item.url !== "" 
-    ? '<a href="' + item.url + '" target="_blank" >' +
-      '<img src="https://img.youtube.com/vi/' + item.videoId + '/0.jpg" alt="썸네일" class="thumbnail" />' +
-      '</a>'
-    : '<img src="https://img.youtube.com/vi/' + item.videoId + '/0.jpg" alt="썸네일" class="thumbnail" />'
-}</td>
-
-              <td data-label="제목"><input type="text" class="title"  value="${item.title}" readonly/></td>
+              <td data-label="썸네일"><img src="https://img.youtube.com/vi/${item.videoId}/0.jpg" alt="썸네일" class="thumbnail" onclick="if (this.hasAttribute('readonly')) { window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}'); }"/></td>
+              <td data-label="제목"><input type="text" class="title" value="${item.title}" readonly/></td>
               <td data-label="날짜" style="text-align:center;"><input type="date" class="date" value="${item.date}" disabled/></td>
-              <td data-label="주소"><input type="text" class="url" placeholder="단축링크 주소 입력" value="${item.url}" readonly /></td>
-              
-<td data-label="메모" colspan="2" style="display:flex; align-items:center; gap:6px;">
-  <input type="text" class="memo" value="${item.memo}" readonly />
-  <button class="delete-btn" onclick="deleteRow(this)">🗑️</button>
-</td>
-<td data-label="삭제" class="pc-delete"><button onclick="deleteRow(this)">🗑️</button></td>
+              <td data-label="주소"><input type="text" class="url" value="${item.url}" readonly onclick="if (this.hasAttribute('readonly')) { window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}'); }"/></td>
+              <td data-label="메모" style='width: 100px;'><input type="text" class="memo" value="${item.memo}" readonly onclick="if (this.hasAttribute('readonly')) { navigator.clipboard.writeText(this.value); alert('메모 복사됨'); }"/></td>
+              <td data-label="삭제"><button onclick="deleteRow(this)">🗑️</button></td>
             `;
           });
         }
@@ -792,65 +590,14 @@ function safeHTML(str) {
 }
 
 </script>
-<style>
-@media (max-width: 600px) {
-  td[data-label="메모"] {
-    display: flex !important;
-    align-items: center;
-    gap: 6px;
-  }
-
-  td[data-label="메모"] input.memo {
-    width: calc(100% - 50px) !important;
-    flex-grow: 1;
-  }
-
-  td[data-label="삭제"] {
-    display: inline-block !important;
-    margin-left: auto;
-  }
-
-  td[data-label="삭제"] button {
-    font-size: 0.8rem;
-    padding: 4px 6px;
-  }
-}
-</style><style>
-@media (max-width: 600px) {
-  tr { display: flex; flex-direction: column; gap: 0.2rem; padding: 0.3rem 0.5rem; margin-bottom: 0.3rem; }
-
-  td[data-label="메모"] {
-    display: flex !important;
-    flex-direction: row;
-    align-items: center;
-    gap: 6px;
-  }
-
-  td[data-label="메모"] input.memo {
-    width: calc(100% - 50px) !important;
-    flex-grow: 1;
-  }
-
-  td[data-label="삭제"] {
-    display: inline-block !important;
-    margin-left: auto;
-  }
-
-  td[data-label="삭제"] button {
-    font-size: 0.8rem;
-    padding: 4px 6px;
-  }
-}
-</style></head>
+</head>
 <body>
 <div style="text-align:center; margin: 10px 0;">
 <img alt="MBC 인제스트 Note" onclick="window.location.href='index.html'" src="title_logo.png" style="cursor:pointer; max-width: 400px; width: 60%; height: auto;"/>
 </div>
 <div style="text-align:center; margin: 1rem 0;">
-<div style="display: flex; justify-content: center; align-items: center; gap: 0.5rem; flex-wrap: nowrap;">
-<input id="search-input" placeholder="제목 또는 메모 검색" style="padding: 8px; width: 60%; max-width: 280px; font-size: 0.9rem;" type="text"/>
+<input id="search-input" placeholder="제목 검색" style="padding: 8px; width: 80%; max-width: 600px; font-size: 0.9rem;" type="text"/>
 <button onclick="searchRecords()">검색</button>
-</div>
 </div>
 <table id="recordTable">
 <thead>
@@ -910,9 +657,9 @@ function safeHTML(str) {
         <td><img src="" alt="썸네일" class="thumbnail"/></td>
         <td data-label="제목"><input type="text" class="title"/></td>
         <td><input type="date" class="date" value="${getToday()}"/></td>
-        <td data-label="주소"><input type="text" class="url" placeholder="단축링크 주소 입력" oninput="updateFromURL(this)"/></td>
-        <td><input type="text" class="memo"/></td>
-        
+        <td data-label="주소"><input type="text" class="url" oninput="updateFromURL(this)"/></td>
+        <td data-label="메모" style='width: 100px;'><input type="text" class="memo"/></td>
+        <td data-label="삭제"><button onclick="deleteRow(this)">🗑️</button></td>
       `;
     }
 
@@ -951,53 +698,42 @@ function safeHTML(str) {
     }
 
     function saveRows() {
-  let data = [...tbody.rows].map(row => {
-    const escapeHTML = (str) => (str || "").replace(/&/g, "&amp;")
-                                          .replace(/</g, "&lt;")
-                                          .replace(/>/g, "&gt;")
-                                          .replace(/"/g, "&quot;")
-                                          .replace(/'/g, "&#039;");
-    const videoId = extractVideoId(row.querySelector(".url").value);
-    const url = row.querySelector(".url").value;
-    const title = row.querySelector(".title").value;
-    const date = row.querySelector(".date").value;
-    const memo = row.querySelector(".memo").value;
-    return { videoId, url: escapeHTML(url), title: escapeHTML(title), date, memo: escapeHTML(memo) };
-  });
+      let data = [...tbody.rows].map(row => {
+        const escapeHTML = (str) => (str || "").replace(/&/g, "&amp;")
+                                              .replace(/</g, "&lt;")
+                                              .replace(/>/g, "&gt;")
+                                              .replace(/"/g, "&quot;")
+                                              .replace(/'/g, "&#039;");
 
-  data.sort((a, b) => new Date(b.date) - new Date(a.date));
-  tbody.innerHTML = "";
+        const videoId = extractVideoId(row.querySelector(".url").value);
+        const url = row.querySelector(".url").value;
+        const title = row.querySelector(".title").value;
+        const date = row.querySelector(".date").value;
+        const memo = row.querySelector(".memo").value;
+        return { videoId, url: escapeHTML(url), title: escapeHTML(title), date, memo: escapeHTML(memo) };
+      });
 
-  data.forEach((item, i) => {
-    const row = tbody.insertRow();
-    const url = item.url || "";
-    const videoId = item.videoId || "";
-    const thumbnailHTML = url
-      ? '<a href="' + url + '" target="_blank" >' +
-        '<img src="https://img.youtube.com/vi/' + videoId + '/0.jpg" alt="썸네일" class="thumbnail" />' +
-        '</a>'
-      : '<img src="https://img.youtube.com/vi/' + videoId + '/0.jpg" alt="썸네일" class="thumbnail" />';
+      data.sort((a, b) => new Date(b.date) - new Date(a.date));
+      tbody.innerHTML = "";
 
-    row.innerHTML = `
-      <td data-label="No.">${i + 1}</td>
-      <td data-label="썸네일">${thumbnailHTML}</td>
-      <td data-label="제목"><input type="text" class="title" value="${item.title}" readonly /></td>
-      <td data-label="날짜" style="text-align:center;"><input type="date" class="date" value="${item.date}" disabled/></td>
-      <td data-label="주소"><input type="text" class="url" value="${item.url}" readonly /></td>
-      
-<td data-label="메모" colspan="2" style="display:flex; align-items:center; gap:6px;">
-  <input type="text" class="memo" value="${item.memo}" readonly />
-  <button class="delete-btn" onclick="deleteRow(this)">🗑️</button>
-</td>
-<td data-label="삭제" class="pc-delete"><button onclick="deleteRow(this)">🗑️</button></td>
-    `;
-  });
+      data.forEach((item, i) => {
+        const row = tbody.insertRow();
+        row.innerHTML = `
+          <td>${i + 1}</td>
+          <td data-label="썸네일"><img src="https://img.youtube.com/vi/${item.videoId}/0.jpg" alt="썸네일" class="thumbnail" onclick="if (this.hasAttribute('readonly')) { window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}'); }"/></td>
+          <td data-label="제목"><input type="text" class="title" value="${item.title}" readonly/></td>
+          <td data-label="날짜" style="text-align:center;"><input type="date" class="date" value="${item.date}" disabled/></td>
+          <td data-label="주소"><input type="text" class="url" value="${item.url}" readonly onclick="if (this.hasAttribute('readonly')) { window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}'); }"/></td>
+          <td data-label="메모" style='width: 100px;'><input type="text" class="memo" value="${item.memo}" readonly onclick="if (this.hasAttribute('readonly')) { navigator.clipboard.writeText(this.value); alert('메모 복사됨'); }"/></td>
+          <td data-label="삭제"><button onclick="deleteRow(this)">🗑️</button></td>
+        `;
+      });
 
-  savedData = data;
-  renderPage(savedData);
-  saveToFirebase(data);
-  alert("저장 완료");
-}
+      savedData = data;
+      renderPage(savedData);
+      saveToFirebase(data);
+      alert("저장되었습니다!");
+    }
 
     function editRows() {
       [...tbody.rows].forEach(row => {
@@ -1027,33 +763,18 @@ function renderPage(data) {
 
   pageData.forEach((item, i) => {
     const row = tbody.insertRow();
-    const url = item.url || "";
-    const isReadonly = true; // always true immediately after save
-    const videoId = item.videoId || "";
-    const thumbnailHTML = isReadonly && url
-      ? '<a href="' + url + '" target="_blank" >' +
-        '<img src="https://img.youtube.com/vi/' + videoId + '/0.jpg" alt="썸네일" class="thumbnail" />' +
-        '</a>'
-      : '<img src="https://img.youtube.com/vi/' + videoId + '/0.jpg" alt="썸네일" class="thumbnail" />';
-
     row.innerHTML = `
       <td data-label="No.">${start + i + 1}</td>
-      <td data-label="썸네일">${thumbnailHTML}</td>
-      <td data-label="제목"><input type="text" class="title" value="${item.title}" readonly /></td>
+      <td data-label="썸네일"><img src="https://img.youtube.com/vi/${item.videoId}/0.jpg" alt="썸네일" class="thumbnail" onclick="if (this.hasAttribute('readonly')) { window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}'); }"/></td>
+      <td data-label="제목"><input type="text" class="title" value="${item.title}" readonly/></td>
       <td data-label="날짜" style="text-align:center;"><input type="date" class="date" value="${item.date}" disabled/></td>
-      <td data-label="주소"><input type="text" class="url" value="${url}" readonly /></td>
-      
-<td data-label="메모" colspan="2" style="display:flex; align-items:center; gap:6px;">
-  <input type="text" class="memo" value="${item.memo}" readonly />
-  <button class="delete-btn" onclick="deleteRow(this)">🗑️</button>
-</td>
-<td data-label="삭제" class="pc-delete"><button onclick="deleteRow(this)">🗑️</button></td>
+      <td data-label="주소"><input type="text" class="url" value="${item.url}" readonly onclick="if (this.hasAttribute('readonly')) { window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}'); }"/></td>
+      <td data-label="메모" style='width: 100px;'><input type="text" class="memo" value="${item.memo}" readonly onclick="if (this.hasAttribute('readonly')) { navigator.clipboard.writeText(this.value); alert('메모 복사됨'); }"/></td>
+      <td data-label="삭제"><button onclick="deleteRow(this)">🗑️</button></td>
     `;
   });
 
   renderPagination(data.length);
-applySwipeDelete();
-bindTitleCopyEvent();
 }
 
 function renderPagination(totalRows) {
@@ -1091,10 +812,7 @@ function safeHTML(str) {
 <script>
 function searchRecords() {
   const keyword = document.getElementById('search-input').value.trim().toLowerCase();
-  const filtered = savedData.filter(item =>
-    (item.title && item.title.toLowerCase().includes(keyword)) ||
-    (item.memo && item.memo.toLowerCase().includes(keyword))
-  );
+  const filtered = savedData.filter(item => item.title.toLowerCase().includes(keyword));
   currentPage = 1;
   renderPage(filtered);
 }
@@ -1107,86 +825,6 @@ function safeHTML(str) {
                    .replace(/'/g, "&#039;");
 }
 
-</script>
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-  document.querySelectorAll('tr').forEach(row => {
-    const urlInput = row.querySelector('input.url');
-    const img = row.querySelector('img.thumbnail');
-    if (urlInput && img && urlInput.hasAttribute('readonly')) {
-      const link = document.createElement('a');
-      link.href = urlInput.value;
-      link.target = '_blank';
-      link.onclick = () => navigator.clipboard.writeText(urlInput.value);
-      img.replaceWith(img.cloneNode(true));  // detach listeners
-      link.appendChild(img);
-      row.querySelector('td[data-label="썸네일"], td:nth-child(2)').appendChild(link);
-    }
-  });
-
-  let touchStartX = 0;
-  let touchEndX = 0;
-
-  document.querySelectorAll('#recordTable tbody tr').forEach(row => {
-    row.addEventListener('touchstart', e => {
-      touchStartX = e.changedTouches[0].clientX;
-    });
-
-    row.addEventListener('touchend', e => {
-      touchEndX = e.changedTouches[0].clientX;
-      if (touchStartX - touchEndX > 50) {
-        if (confirm("정말 삭제하시겠습니까?")) {
-          row.remove();
-          if (typeof updateRowIndices === 'function') updateRowIndices();
-        }
-      }
-    });
-  });
-});
-</script>
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll("#recordTable tbody tr").forEach(row => {
-    row.classList.add("swipe-row");
-    const delBtn = document.createElement("div");
-    delBtn.className = "swipe-delete";
-    delBtn.innerText = "삭제";
-    delBtn.onclick = () => {
-      if (confirm("정말 삭제하시겠습니까?")) {
-        row.remove();
-        if (typeof updateRowIndices === 'function') updateRowIndices();
-      }
-    };
-    row.appendChild(delBtn);
-
-    let startX = 0;
-    row.addEventListener("touchstart", e => {
-      startX = e.touches[0].clientX;
-    });
-
-    row.addEventListener("touchend", e => {
-      const diffX = startX - e.changedTouches[0].clientX;
-      if (diffX > 40) {
-        row.classList.add("show-delete");
-      } else if (diffX < -40) {
-        row.classList.remove("show-delete");
-      }
-    });
-  });
-});
-</script>
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-  document.querySelector("#recordTable").addEventListener("click", function(e) {
-    if (e.target && e.target.classList.contains("title")) {
-      const isReadOnly = e.target.getAttribute("readonly") !== null || e.target.readOnly === true;
-      if (isReadOnly) {
-        navigator.clipboard.writeText(e.target.value);
-        alert("제목 복사 완료");
-      }
-    }
-  });
-});
 </script>
 </body>
 </html>
