@@ -1091,7 +1091,10 @@ function safeHTML(str) {
 <script>
 function searchRecords() {
   const keyword = document.getElementById('search-input').value.trim().toLowerCase();
-  const filtered = savedData.filter(item => item.title.toLowerCase().includes(keyword));
+  const filtered = savedData.filter(item =>
+    (item.title && item.title.toLowerCase().includes(keyword)) ||
+    (item.memo && item.memo.toLowerCase().includes(keyword))
+  );
   currentPage = 1;
   renderPage(filtered);
 }
