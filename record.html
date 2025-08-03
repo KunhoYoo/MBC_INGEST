@@ -1,11 +1,12 @@
 
 <!DOCTYPE html>
+
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>유튜브 기록</title>
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>유튜브 기록</title>
+<style>
     body {
       font-family: 'Segoe UI', sans-serif;
       background: #f7f7f7;
@@ -48,7 +49,10 @@
       font-size: 0.9rem;
     }
 
-    input[type="text"], input[type="date"] {
+    input[type="text"], input[type="date"], input.memo {
+  width: 100% !important;
+  box-sizing: border-box;
+
       width: 95%;
       padding: 4px;
       font-size: 0.85rem;
@@ -132,6 +136,33 @@
 
 
 @media (max-width: 600px) {
+  img.thumbnail {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    border-radius: 6px;
+    margin-bottom: 0.5rem;
+  }
+  td[data-label="No."] {
+    display: none !important;
+  }
+
+  td[data-label="메모"] {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  td[data-label="메모"] input.memo {
+    width: 100% !important;
+    box-sizing: border-box;
+
+    flex-grow: 1;
+  }
+
+  td[data-label="삭제"] {
+    display: none !important;
+  }
   tr {
     display: flex;
     flex-direction: column;
@@ -216,6 +247,7 @@
   }
 
   td::before {
+  display: none !important;
     content: attr(data-label);
     font-weight: bold;
     display: block;
@@ -224,13 +256,16 @@
   }
 
   .thumbnail {
-    width: 100%;
+    width: 100%; max-width: 100%; height: auto;
     max-width: 100%;
     height: auto;
     margin-bottom: 0.5rem;
   }
 
-  input[type="text"], input[type="date"] {
+  input[type="text"], input[type="date"], input.memo {
+  width: 100% !important;
+  box-sizing: border-box;
+
     font-size: 0.9rem;
     width: 100%;
   }
@@ -246,6 +281,33 @@
 
 
 @media (max-width: 600px) {
+  img.thumbnail {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    border-radius: 6px;
+    margin-bottom: 0.5rem;
+  }
+  td[data-label="No."] {
+    display: none !important;
+  }
+
+  td[data-label="메모"] {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  td[data-label="메모"] input.memo {
+    width: 100% !important;
+    box-sizing: border-box;
+
+    flex-grow: 1;
+  }
+
+  td[data-label="삭제"] {
+    display: none !important;
+  }
   tr {
     display: flex;
     flex-direction: column;
@@ -347,16 +409,108 @@
   }
 
   .thumbnail {
-    width: 100%;
+    width: 100%; max-width: 100%; height: auto;
     max-width: 100%;
     height: auto;
     border-radius: 5px;
   }
 }
 
+
+img.thumbnail {
+  max-height: 200px;
+  object-fit: cover;
+}
+
+
+img.thumbnail {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+
+@media (min-width: 769px) {
+  img.thumbnail {
+    max-width: 220px;
+    height: auto;
+    aspect-ratio: unset;
+  }
+}
+
+
+@media (max-width: 600px) {
+  .swipe-row {
+    position: relative;
+    transition: transform 0.3s ease;
+    overflow: hidden;
+  }
+
+  .swipe-delete {
+    position: absolute;
+    right: -70px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #b22222;
+    color: white;
+    padding: 6px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: right 0.3s ease;
+  }
+
+  .swipe-row.show-delete .swipe-delete {
+    right: 10px;
+  }
+}
+
 </style>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js">
+function safeHTML(str) {
+  return (str || "").replace(/&/g, "&amp;")
+                   .replace(/</g, "&lt;")
+                   .replace(/>/g, "&gt;")
+                   .replace(/"/g, "&quot;")
+                   .replace(/'/g, "&#039;");
+}
 
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js">
+
+function applySwipeDelete() {
+  document.querySelectorAll("#recordTable tbody tr").forEach(row => {
+    if (!row.classList.contains("swipe-row")) {
+      row.classList.add("swipe-row");
+
+      const delBtn = document.createElement("div");
+      delBtn.className = "swipe-delete";
+      delBtn.innerText = "삭제";
+      delBtn.onclick = () => {
+        if (confirm("정말 삭제하시겠습니까?")) {
+          row.remove();
+          if (typeof updateRowIndices === 'function') updateRowIndices();
+        }
+      };
+      row.appendChild(delBtn);
+
+      let startX = 0;
+      row.addEventListener("touchstart", e => {
+        startX = e.touches[0].clientX;
+      });
+
+      row.addEventListener("touchend", e => {
+        const diffX = startX - e.changedTouches[0].clientX;
+        if (diffX > 40) {
+          row.classList.add("show-delete");
+        } else if (diffX < -40) {
+          row.classList.remove("show-delete");
+        }
+      });
+    }
+  });
+}
+
+</script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js">
 function safeHTML(str) {
   return (str || "").replace(/&/g, "&amp;")
                    .replace(/</g, "&lt;")
@@ -366,17 +520,7 @@ function safeHTML(str) {
 }
 
 </script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js">
-function safeHTML(str) {
-  return (str || "").replace(/&/g, "&amp;")
-                   .replace(/</g, "&lt;")
-                   .replace(/>/g, "&gt;")
-                   .replace(/"/g, "&quot;")
-                   .replace(/'/g, "&#039;");
-}
-
-</script>
-  <script>
+<script>
     const firebaseConfig = {
       apiKey: "AIzaSyACkd1QzPgDnmRz3b206e4IiePiS55keio",
       authDomain: "mbc-ingest.firebaseapp.com",
@@ -408,11 +552,19 @@ function safeHTML(str) {
             const row = tbody.insertRow();
             row.innerHTML = `
               <td>${i + 1}</td>
-              <td data-label="썸네일"><img src="https://img.youtube.com/vi/${item.videoId}/0.jpg" alt="썸네일" class="thumbnail" onclick="if (this.hasAttribute('readonly')) { window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}'); }"/></td>
-              <td data-label="제목"><input type="text" class="title" value="${item.title}" readonly/></td>
+              
+<td data-label="썸네일">${
+  item.url && item.url !== "" 
+    ? '<a href="' + item.url + '" target="_blank" onclick="navigator.clipboard.writeText(\'' + item.url + '\')">' +
+      '<img src="https://img.youtube.com/vi/' + item.videoId + '/0.jpg" alt="썸네일" class="thumbnail" />' +
+      '</a>'
+    : '<img src="https://img.youtube.com/vi/' + item.videoId + '/0.jpg" alt="썸네일" class="thumbnail" />'
+}</td>
+
+              <td data-label="제목"><input type="text" class="title" onclick="if (this.hasAttribute('readonly')) { navigator.clipboard.writeText(this.value); alert('제목 복사됨'); }" value="${item.title}" readonly/></td>
               <td data-label="날짜" style="text-align:center;"><input type="date" class="date" value="${item.date}" disabled/></td>
-              <td data-label="주소"><input type="text" class="url" value="${item.url}" readonly onclick="if (this.hasAttribute('readonly')) { window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}'); }"/></td>
-              <td data-label="메모" style='width: 100px;'><input type="text" class="memo" value="${item.memo}" readonly onclick="if (this.hasAttribute('readonly')) { navigator.clipboard.writeText(this.value); alert('메모 복사됨'); }"/></td>
+              <td data-label="주소"><input type="text" class="url" placeholder="단축링크 주소 입력" value="${item.url}" readonly onclick="if (this.hasAttribute('readonly')) { window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}'); }"/></td>
+              <td><input type="text" class="memo" value="${item.memo}" readonly onclick="if (this.hasAttribute('readonly')) { navigator.clipboard.writeText(this.value); alert('메모 복사됨'); }"/></td>
               <td data-label="삭제"><button onclick="deleteRow(this)">🗑️</button></td>
             `;
           });
@@ -443,41 +595,43 @@ function safeHTML(str) {
 }
 
 </script>
-
 </head>
 <body>
-
 <div style="text-align:center; margin: 10px 0;">
-  <img src="title_logo.png" alt="MBC 인제스트 Note" style="cursor:pointer; max-width: 400px; width: 60%; height: auto;" onclick="window.location.href='index.html'"/>
+<img alt="MBC 인제스트 Note" onclick="window.location.href='index.html'" src="title_logo.png" style="cursor:pointer; max-width: 400px; width: 60%; height: auto;"/>
 </div>
 
-  
+
 <div style="text-align:center; margin: 1rem 0;">
-  <input id="search-input" type="text" placeholder="제목 검색" style="padding: 8px; width: 80%; max-width: 600px; font-size: 0.9rem;">
-  <button onclick="searchRecords()">검색</button>
+  <div style="display: flex; justify-content: center; align-items: center; gap: 0.5rem; flex-wrap: nowrap;">
+    <input id="search-input" type="text" placeholder="제목 또는 메모 검색" 
+           style="padding: 8px; width: 60%; max-width: 280px; font-size: 0.9rem;">
+    <button onclick="searchRecords()">검색</button>
+  </div>
 </div>
 
-  <table id="recordTable">
-    <thead>
-      <tr>
-        <th>No.</th>
-        <th>썸네일</th>
-        <th>제목</th>
-        <th>날짜</th>
-        <th>주소</th>
-        <th>메모</th>
-        <th>삭제</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-  <div class="center-buttons">
-    <button onclick="addRow()">추가</button>
-    <button onclick="editRows()">편집</button>
-    <button onclick="saveRows()">저장</button>
-  </div>
+</div>
 
-  <script>
+<table id="recordTable">
+<thead>
+<tr>
+<th>No.</th>
+<th>썸네일</th>
+<th>제목</th>
+<th>날짜</th>
+<th>주소</th>
+<th>메모</th>
+<th>삭제</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+<div class="center-buttons">
+<button onclick="addRow()">추가</button>
+<button onclick="editRows()">편집</button>
+<button onclick="saveRows()">저장</button>
+</div>
+<script>
     const tbody = document.querySelector("#recordTable tbody");
     let savedData = [];
 
@@ -516,8 +670,8 @@ function safeHTML(str) {
         <td><img src="" alt="썸네일" class="thumbnail"/></td>
         <td data-label="제목"><input type="text" class="title"/></td>
         <td><input type="date" class="date" value="${getToday()}"/></td>
-        <td data-label="주소"><input type="text" class="url" oninput="updateFromURL(this)"/></td>
-        <td data-label="메모" style='width: 100px;'><input type="text" class="memo"/></td>
+        <td data-label="주소"><input type="text" class="url" placeholder="단축링크 주소 입력" oninput="updateFromURL(this)"/></td>
+        <td><input type="text" class="memo"/></td>
         <td data-label="삭제"><button onclick="deleteRow(this)">🗑️</button></td>
       `;
     }
@@ -579,11 +733,11 @@ function safeHTML(str) {
         const row = tbody.insertRow();
         row.innerHTML = `
           <td>${i + 1}</td>
-          <td data-label="썸네일"><img src="https://img.youtube.com/vi/${item.videoId}/0.jpg" alt="썸네일" class="thumbnail" onclick="if (this.hasAttribute('readonly')) { window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}'); }"/></td>
-          <td data-label="제목"><input type="text" class="title" value="${item.title}" readonly/></td>
+          <td data-label="썸네일"><a href="${item.url}" target="_blank" onclick="navigator.clipboard.writeText('${item.url}')"><img src="https://img.youtube.com/vi/${item.videoId}/0.jpg" alt="썸네일" class="thumbnail" /></a></td>
+          <td data-label="제목"><input type="text" class="title" onclick="if (this.hasAttribute('readonly')) { navigator.clipboard.writeText(this.value); alert('제목 복사됨'); }" value="${item.title}" readonly/></td>
           <td data-label="날짜" style="text-align:center;"><input type="date" class="date" value="${item.date}" disabled/></td>
-          <td data-label="주소"><input type="text" class="url" value="${item.url}" readonly onclick="if (this.hasAttribute('readonly')) { window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}'); }"/></td>
-          <td data-label="메모" style='width: 100px;'><input type="text" class="memo" value="${item.memo}" readonly onclick="if (this.hasAttribute('readonly')) { navigator.clipboard.writeText(this.value); alert('메모 복사됨'); }"/></td>
+          <td data-label="주소"><input type="text" class="url" placeholder="단축링크 주소 입력" value="${item.url}" readonly onclick="if (this.hasAttribute('readonly')) { window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}'); }"/></td>
+          <td><input type="text" class="memo" value="${item.memo}" readonly onclick="if (this.hasAttribute('readonly')) { navigator.clipboard.writeText(this.value); alert('메모 복사됨'); }"/></td>
           <td data-label="삭제"><button onclick="deleteRow(this)">🗑️</button></td>
         `;
       });
@@ -591,7 +745,7 @@ function safeHTML(str) {
       savedData = data;
       renderPage(savedData);
       saveToFirebase(data);
-      alert("저장되었습니다!");
+      alert("저장되었습니다.");
     }
 
     function editRows() {
@@ -610,7 +764,6 @@ function safeHTML(str) {
 }
 
 </script>
-
 <script>
 let currentPage = 1;
 const rowsPerPage = 20;
@@ -623,18 +776,28 @@ function renderPage(data) {
 
   pageData.forEach((item, i) => {
     const row = tbody.insertRow();
+    const url = item.url || "";
+    const isReadonly = true; // always true immediately after save
+    const videoId = item.videoId || "";
+    const thumbnailHTML = isReadonly && url
+      ? '<a href="' + url + '" target="_blank" onclick="navigator.clipboard.writeText(\'' + url + '\')">' +
+        '<img src="https://img.youtube.com/vi/' + videoId + '/0.jpg" alt="썸네일" class="thumbnail" />' +
+        '</a>'
+      : '<img src="https://img.youtube.com/vi/' + videoId + '/0.jpg" alt="썸네일" class="thumbnail" />';
+
     row.innerHTML = `
       <td data-label="No.">${start + i + 1}</td>
-      <td data-label="썸네일"><img src="https://img.youtube.com/vi/${item.videoId}/0.jpg" alt="썸네일" class="thumbnail" onclick="if (this.hasAttribute('readonly')) { window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}'); }"/></td>
+      <td data-label="썸네일">${thumbnailHTML}</td>
       <td data-label="제목"><input type="text" class="title" value="${item.title}" readonly/></td>
       <td data-label="날짜" style="text-align:center;"><input type="date" class="date" value="${item.date}" disabled/></td>
-      <td data-label="주소"><input type="text" class="url" value="${item.url}" readonly onclick="if (this.hasAttribute('readonly')) { window.open('${item.url}', '_blank'); navigator.clipboard.writeText('${item.url}'); }"/></td>
-      <td data-label="메모" style='width: 100px;'><input type="text" class="memo" value="${item.memo}" readonly onclick="if (this.hasAttribute('readonly')) { navigator.clipboard.writeText(this.value); alert('메모 복사됨'); }"/></td>
+      <td data-label="주소"><input type="text" class="url" value="${url}" readonly onclick="if (this.hasAttribute('readonly')) { window.open('${url}', '_blank'); navigator.clipboard.writeText('${url}'); }"/></td>
+      <td><input type="text" class="memo" value="${item.memo}" readonly onclick="if (this.hasAttribute('readonly')) { navigator.clipboard.writeText(this.value); alert('메모 복사됨'); }"/></td>
       <td data-label="삭제"><button onclick="deleteRow(this)">🗑️</button></td>
     `;
   });
 
   renderPagination(data.length);
+applySwipeDelete();
 }
 
 function renderPagination(totalRows) {
@@ -669,8 +832,6 @@ function safeHTML(str) {
 }
 
 </script>
-
-
 <script>
 function searchRecords() {
   const keyword = document.getElementById('search-input').value.trim().toLowerCase();
@@ -687,6 +848,73 @@ function safeHTML(str) {
                    .replace(/'/g, "&#039;");
 }
 
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  document.querySelectorAll('tr').forEach(row => {
+    const urlInput = row.querySelector('input.url');
+    const img = row.querySelector('img.thumbnail');
+    if (urlInput && img && urlInput.hasAttribute('readonly')) {
+      const link = document.createElement('a');
+      link.href = urlInput.value;
+      link.target = '_blank';
+      link.onclick = () => navigator.clipboard.writeText(urlInput.value);
+      img.replaceWith(img.cloneNode(true));  // detach listeners
+      link.appendChild(img);
+      row.querySelector('td[data-label="썸네일"], td:nth-child(2)').appendChild(link);
+    }
+  });
+
+  let touchStartX = 0;
+  let touchEndX = 0;
+
+  document.querySelectorAll('#recordTable tbody tr').forEach(row => {
+    row.addEventListener('touchstart', e => {
+      touchStartX = e.changedTouches[0].clientX;
+    });
+
+    row.addEventListener('touchend', e => {
+      touchEndX = e.changedTouches[0].clientX;
+      if (touchStartX - touchEndX > 50) {
+        if (confirm("정말 삭제하시겠습니까?")) {
+          row.remove();
+          if (typeof updateRowIndices === 'function') updateRowIndices();
+        }
+      }
+    });
+  });
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll("#recordTable tbody tr").forEach(row => {
+    row.classList.add("swipe-row");
+    const delBtn = document.createElement("div");
+    delBtn.className = "swipe-delete";
+    delBtn.innerText = "삭제";
+    delBtn.onclick = () => {
+      if (confirm("정말 삭제하시겠습니까?")) {
+        row.remove();
+        if (typeof updateRowIndices === 'function') updateRowIndices();
+      }
+    };
+    row.appendChild(delBtn);
+
+    let startX = 0;
+    row.addEventListener("touchstart", e => {
+      startX = e.touches[0].clientX;
+    });
+
+    row.addEventListener("touchend", e => {
+      const diffX = startX - e.changedTouches[0].clientX;
+      if (diffX > 40) {
+        row.classList.add("show-delete");
+      } else if (diffX < -40) {
+        row.classList.remove("show-delete");
+      }
+    });
+  });
+});
 </script>
 
 </body>
