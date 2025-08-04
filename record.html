@@ -821,7 +821,7 @@ function safeHTML(str) {
         <td><img src="" alt="썸네일" class="thumbnail"/></td>
         <td data-label="제목"><input type="text" class="title"/></td>
         <td><input type="date" class="date" value="${getToday()}"/></td>
-        <td data-label="주소"><input type="text" class="url" oninput="updateFromURL(this)"/></td>
+        <td data-label="주소"><input type="text" class="url" placeholder="유튜브 단축링크 입력" oninput="updateFromURL(this)"/></td>
         <td data-label="메모"><input type="text" class="memo"/></td>
         <td data-label="삭제"><button onclick="deleteRow(this)" style="padding: 6px 10px; height: auto;">🗑️</button></td>
       `;
