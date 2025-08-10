@@ -776,7 +776,7 @@ function showAudioProcess() {
 <style>
   /* Meal gallery styles */
   #meal-section-v2 { display:none; text-align:center; margin:30px auto; max-width:900px; }
-  #meal-main { max-width: 90%; height: auto; border:1px solid #ccc; border-radius:8px; }
+  #meal-main { width: 100%; max-width: 350px; height: 500px; object-fit: contain; border:1px solid #ccc; border-radius:8px; display:block; margin:0 auto; }
   .meal-controls { margin-top:12px; display:flex; gap:8px; justify-content:center; flex-wrap:wrap; }
   .meal-controls button { background:#004080; color:#fff; border:none; border-radius:8px; padding:10px 14px; cursor:pointer; }
   .meal-controls button:hover { background:#003060; }
@@ -795,14 +795,13 @@ function showAudioProcess() {
 
 <div id="meal-section-v2">
   <div id="visitor-counter">👀 배고픈 사람: 0</div>
-  <img id="meal-main" alt="식단 이미지(미리보기)" src="meal.jpg">
+  <img id="meal-main" alt="식단 이미지(미리보기)" src="">
   <div class="meal-controls">
     <button id="meal-upload-btn" type="button">업로드</button>
     <button id="meal-download-btn" type="button">다운로드</button>
-    <button id="meal-refresh-btn" type="button">새로고침</button>
-  </div>
+    </div>
   <input id="meal-file-input" type="file" accept="image/*" style="display:none">
-  <div id="meal-gallery" aria-label="업로드된 식단 이미지 목록"></div>
+  <div id="meal-gallery" aria-label="업로드된 식단 이미지 목록" style="display:none"></div>
 </div>
 
 <script>
@@ -873,11 +872,7 @@ function showAudioProcess() {
     gallery.innerHTML = '';
     var storageRef = firebase.storage().ref('meal');
     storageRef.listAll().then(function(res){
-      if (!res.items.length) {
-        // fallback to bundled meal.jpg
-        main.src = 'meal.jpg';
-        return;
-      }
+      if (!res.items.length) { return; }
       // Fetch URLs with names, then sort by name desc (timestamped)
       var promises = res.items.map(function(itemRef){
         return itemRef.getDownloadURL().then(function(url){ 
