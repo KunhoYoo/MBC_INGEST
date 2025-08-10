@@ -771,3 +771,170 @@ function showAudioProcess() {
 
 </body>
 </html>
+
+<!-- ===== M E A L  U P L O A D  (PW=rjsgh1)  ===== -->
+<style>
+  /* Meal gallery styles */
+  #meal-section-v2 { display:none; text-align:center; margin:30px auto; max-width:900px; }
+  #meal-main { max-width: 90%; height: auto; border:1px solid #ccc; border-radius:8px; }
+  .meal-controls { margin-top:12px; display:flex; gap:8px; justify-content:center; flex-wrap:wrap; }
+  .meal-controls button { background:#004080; color:#fff; border:none; border-radius:8px; padding:10px 14px; cursor:pointer; }
+  .meal-controls button:hover { background:#003060; }
+  #meal-gallery { 
+    margin-top:16px; 
+    display:grid; 
+    grid-template-columns: repeat(auto-fill, minmax(140px,1fr));
+    gap:10px;
+    align-items:start;
+  }
+  #meal-gallery img {
+    width:100%; height:auto; border:1px solid #ccc; border-radius:6px; cursor:pointer;
+  }
+  #meal-gallery img.active { outline:3px solid #ff5252; }
+</style>
+
+<div id="meal-section-v2">
+  <div id="visitor-counter">👀 배고픈 사람: 0</div>
+  <img id="meal-main" alt="식단 이미지(미리보기)" src="meal.jpg">
+  <div class="meal-controls">
+    <button id="meal-upload-btn" type="button">업로드</button>
+    <button id="meal-download-btn" type="button">다운로드</button>
+    <button id="meal-refresh-btn" type="button">새로고침</button>
+  </div>
+  <input id="meal-file-input" type="file" accept="image/*" style="display:none">
+  <div id="meal-gallery" aria-label="업로드된 식단 이미지 목록"></div>
+</div>
+
+<script>
+  // Override the old showMealPage() to use the new v2 section
+  function showMealPage() {
+    // hide others
+    document.getElementById('login-section').style.display = 'none';
+    var fs = document.getElementById('form-section');
+    if (fs) fs.style.display = 'none';
+    var oldMeal = document.getElementById('meal-section');
+    if (oldMeal) oldMeal.style.display = 'none';
+    var audio = document.getElementById('audio-process-section');
+    if (audio) audio.style.display = 'none';
+    // show new
+    document.getElementById('meal-section-v2').style.display = 'block';
+    loadMealImagesFromFirebase_v2();
+  }
+
+  // Utility: make a timestamped filename to keep order
+  function tsFileName(ext) {
+    var d = new Date();
+    var pad = n => String(n).padStart(2,'0');
+    var name = d.getFullYear().toString() + pad(d.getMonth()+1) + pad(d.getDate()) + "_" + pad(d.getHours()) + pad(d.getMinutes()) + pad(d.getSeconds());
+    return name + "." + ext.toLowerCase();
+  }
+
+  // Upload flow guarded by password
+  document.addEventListener('click', function(e){
+    if (e.target && e.target.id === 'meal-upload-btn') {
+      var pw = prompt('식단표 업로드 비밀번호를 입력하세요.');
+      if (pw !== 'rjsgh1') { alert('비밀번호가 틀립니다.'); return; }
+      document.getElementById('meal-file-input').click();
+    }
+    if (e.target && e.target.id === 'meal-download-btn') {
+      var img = document.getElementById('meal-main');
+      var a = document.createElement('a');
+      a.href = img.src;
+      a.download = 'meal.jpg';
+      a.click();
+    }
+    if (e.target && e.target.id === 'meal-refresh-btn') {
+      loadMealImagesFromFirebase_v2();
+    }
+  });
+
+  document.getElementById('meal-file-input').addEventListener('change', function(e){
+    var file = e.target.files && e.target.files[0];
+    if (!file) return;
+    var ext = (file.name.split('.').pop() || 'png');
+    var path = 'meal/' + tsFileName(ext);
+    var ref = firebase.storage().ref(path);
+    ref.put(file).then(function(){ 
+      return ref.getDownloadURL();
+    }).then(function(url){
+      document.getElementById('meal-main').src = url;
+      alert('업로드 완료!');
+      loadMealImagesFromFirebase_v2();
+      e.target.value = '';
+    }).catch(function(err){
+      alert('업로드 실패: ' + err.message);
+    });
+  });
+
+  // Load gallery from Firebase Storage (folder: meal/)
+  function loadMealImagesFromFirebase_v2() {
+    var gallery = document.getElementById('meal-gallery');
+    var main = document.getElementById('meal-main');
+    gallery.innerHTML = '';
+    var storageRef = firebase.storage().ref('meal');
+    storageRef.listAll().then(function(res){
+      if (!res.items.length) {
+        // fallback to bundled meal.jpg
+        main.src = 'meal.jpg';
+        return;
+      }
+      // Fetch URLs with names, then sort by name desc (timestamped)
+      var promises = res.items.map(function(itemRef){
+        return itemRef.getDownloadURL().then(function(url){ 
+          return { name: itemRef.name, url: url }; 
+        });
+      });
+      Promise.all(promises).then(function(items){
+        items.sort(function(a,b){ return a.name < b.name ? 1 : (a.name > b.name ? -1 : 0); });
+        // Set main to newest
+        main.src = items[0].url;
+        // Render gallery
+        items.forEach(function(it, idx){
+          var img = document.createElement('img');
+          img.src = it.url;
+          img.alt = it.name;
+          if (idx === 0) img.classList.add('active');
+          img.onclick = function(){
+            document.querySelectorAll('#meal-gallery img').forEach(function(i){ i.classList.remove('active'); });
+            img.classList.add('active');
+            main.src = it.url;
+          };
+          gallery.appendChild(img);
+        });
+      });
+    }).catch(function(err){
+      alert('이미지 목록 로드 실패: ' + err.message);
+    });
+  }
+
+
+  // ===== Firebase visitor counter (daily reset) =====
+  function incrementVisitorCount(){
+    var today = new Date();
+    var y = today.getFullYear();
+    var m = ('0' + (today.getMonth()+1)).slice(-2);
+    var d = ('0' + today.getDate()).slice(-2);
+    var dateKey = y + "-" + m + "-" + d;
+
+    var counterRef = firebase.database().ref("mealPageVisitors/" + dateKey + "/count");
+    counterRef.once("value").then(function(snapshot){
+      var currentCount = snapshot.exists() ? snapshot.val() : 0;
+      currentCount++;
+      counterRef.set(currentCount).then(function(){
+        document.getElementById('visitor-counter').textContent = "👀 배고픈 사람: " + currentCount;
+      });
+    }).catch(function(err){
+      console.error("방문자 수 업데이트 실패:", err);
+    });
+  }
+
+  // Override showMealPage to increment counter
+  var originalShowMealPage = showMealPage;
+  showMealPage = function(){
+    originalShowMealPage();
+    incrementVisitorCount();
+  };
+  // ===== /Firebase visitor counter (daily reset) =====
+
+</script>
+<!-- ===== /MEAL UPLOAD ===== -->
