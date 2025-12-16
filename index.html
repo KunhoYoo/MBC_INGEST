@@ -2,7 +2,6 @@
 
 <html lang="ko">
 <head>
-<!-- KakaoTalk Sharing Thumbnail -->
 <meta content="MBC 인제스트 Note" property="og:title"/>
 <meta content="MBC 촬영 인제스트 내용을 기록하고 공유하세요." property="og:description"/>
 <meta content="mbc_logo.jpg" property="og:image"/>
@@ -137,6 +136,7 @@
 <div class="form-group"><label>의뢰자</label><input id="client" type="text"/></div>
 <div class="form-group"><label>의뢰형식</label><input id="request_type" type="text" value="원본"/></div>
 <div class="form-group"><label>촬영일</label><input id="shoot_date" type="date"/></div>
+<div class="form-group"><label>기자 동행 여부</label><input id="reporter_accompany" type="text"/></div>
 <div class="form-group"><label>대분류</label><input id="category_main" type="text"/></div>
 <div class="form-group"><label>소분류</label><input id="category_sub" type="text"/></div>
 <div class="form-group"><label>제목</label><input id="title" type="text"/></div>
@@ -223,7 +223,23 @@
   }
 
   function generateContent() {
-    const fields = [['의뢰자', 'client'], ['의뢰형식', 'request_type'], ['촬영일', 'shoot_date'], ['대분류', 'category_main'], ['소분류', 'category_sub'], ['제목', 'title'], ['특이사항', 'notes'], ['촬영내용', 'content'], ['촬영장소', 'location'], ['영상기자', 'videographer'], ['취재기자', 'reporter'], ['영상PD/VJ', 'vj'], ['카드번호', 'card_number'], ['촬영장비', 'equipment']];
+    const fields = [
+      ['의뢰자', 'client'], 
+      ['의뢰형식', 'request_type'], 
+      ['촬영일', 'shoot_date'], 
+      ['기자 동행 여부', 'reporter_accompany'], // 수정 반영
+      ['대분류', 'category_main'], 
+      ['소분류', 'category_sub'], 
+      ['제목', 'title'], 
+      ['특이사항', 'notes'], 
+      ['촬영내용', 'content'], 
+      ['촬영장소', 'location'], 
+      ['영상기자', 'videographer'], 
+      ['취재기자', 'reporter'], 
+      ['영상PD/VJ', 'vj'], 
+      ['카드번호', 'card_number'], 
+      ['촬영장비', 'equipment']
+    ];
     let content = ``;
     fields.forEach(([label, id], idx) => {
   content += `${label}: ${document.getElementById(id).value}`;
@@ -326,6 +342,7 @@ function parseSMSAndInsert() {
   const title = parts[0] || "";
   const reporter = parts[1] || "";
   const third = parts[2] || "";
+  const accompany = parts[3] || ""; // 수정 반영: 기자 동행 여부
   const location = parts[4] || "";
 
   const VJ_NAMES = [
@@ -343,6 +360,12 @@ function parseSMSAndInsert() {
   if (reporter) {
     document.getElementById('reporter').value = reporter;
   }
+  
+  // 수정 반영: 기자 동행 여부 입력
+  if (accompany) {
+    document.getElementById('reporter_accompany').value = accompany;
+  }
+
 
   if (third) {
     const isVJ = VJ_NAMES.includes(third);
@@ -773,7 +796,6 @@ function showAudioProcess() {
 </body>
 </html>
 
-<!-- ===== M E A L  U P L O A D  (PW=rjsgh1)  ===== -->
 <style>
   /* Meal gallery styles */
   #meal-section-v2 { display:none; text-align:center; margin:30px auto; max-width:900px; }
@@ -933,11 +955,3 @@ function showAudioProcess() {
   // ===== /Firebase visitor counter (daily reset) =====
 
 </script>
-<!-- ===== /MEAL UPLOAD ===== -->
-
-
-
-
-
-
-
